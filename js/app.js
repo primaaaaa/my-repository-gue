@@ -143,10 +143,20 @@ class App {
       }
     });
 
-    // Click anywhere to trigger hand wave
-    window.addEventListener('click', () => {
+    // Click to wave (active in hero area, avoids triggering when clicking links/buttons)
+    window.addEventListener('click', (e) => {
+      if (window.scrollY < window.innerHeight * 0.8 && !e.target.closest('a, button')) {
+        if (this.character) {
+          this.character.triggerWave();
+        }
+      }
+    });
+
+    // Scroll listener: optimize and cleanly hide 3D character when completely scrolled past hero
+    window.addEventListener('scroll', () => {
       if (this.character) {
-        this.character.triggerWave();
+        const isHeroVisible = window.scrollY < window.innerHeight;
+        this.character.group.visible = isHeroVisible;
       }
     });
   }
@@ -157,7 +167,7 @@ class App {
     const delta = this.clock.getDelta();
     const time = this.clock.getElapsedTime();
 
-    if (this.character) {
+    if (this.character && this.character.group.visible) {
       // 3D Raycasting gaze tracking:
       // Character looks up from below towards mouse cursor across the screen
       this.raycaster.setFromCamera(this.mouseNDC, this.camera);
@@ -181,7 +191,9 @@ class App {
       this.character.update(delta, time);
     }
 
-    this.renderer.render(this.scene, this.camera);
+    if (!this.character || this.character.group.visible) {
+      this.renderer.render(this.scene, this.camera);
+    }
   }
 }
 

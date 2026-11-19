@@ -4,16 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Creative Portfolio</title>
+  <title>Muhammad Prima Yudhistira — Creative Portfolio</title>
 
-  <!-- Google Fonts: Playfair Display (Editorial High-Fashion Serif) & Plus Jakarta Sans -->
+  <!-- Google Fonts: Plus Jakarta Sans (900 Heavy Grotesque Display) & Playfair Display -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800;900&family=Playfair+Display:ital,wght@0,700;0,800;0,900;1,700&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="css/style.css">
+  <!-- Cache-busting query parameter so browser always loads latest styles -->
+  <link rel="stylesheet" href="css/style.css?v=20261119-about-v1">
 
   <!-- Three.js Import Map (Local offline-first) -->
   <script type="importmap">
@@ -26,35 +27,160 @@
   </script>
 </head>
 
-<body>
+<body id="top">
 
-  <!-- Editorial Hero Section (Cream Minimalist Poster) -->
+  <!-- ========================================================
+       HERO SECTION (100vh)
+       ======================================================== -->
   <main class="hero-section">
 
     <!-- Top Centered Metadata -->
     <header class="hero-header-center">
       <div class="meta-block">
-        <span class="meta-label">MUHAMMAD PRIMA YUDHISTIRA</span>
-        <span class="meta-val">FULLSTACK DEVELOPER</span>
+        <span class="meta-label">SOFTWARE ENGINEERING STUDENT</span>
+        <span class="meta-val">IPB UNIVERSITY</span>
       </div>
       <div class="meta-block">
-        <span class="meta-label">IPB UNIVERSITY</span>
-        <span class="meta-val">SOFTWARE ENGINEERING</span>
+        <span class="meta-label">PROGRAMMER</span>
+        <span class="meta-val">PORTFOLIO EDITION • 2026</span>
       </div>
     </header>
 
-    <!-- Center Editorial Masthead: MY portfoliO -->
-    <div class="hero-title-container">
-      <div class="title-sub">MY</div>
-      <h1 class="main-title">
-        por<span class="italic-tf">tf</span>oli<span class="cap-o">O</span>
-      </h1>
+    <!-- LAYER 1: SOLID RED TITLE (Behind 3D Character, z-index: 2) -->
+    <div class="hero-title-layer title-back" aria-hidden="true">
+      <div class="hero-title-container">
+        <div class="name-line name-line-1">MUHAMMAD</div>
+        <div class="name-line name-line-2">PRIMA</div>
+        <div class="name-line name-line-3">YUDHISTIRA</div>
+      </div>
     </div>
 
-    <!-- 3D Canvas Viewport (Character peeking up from the bottom) -->
-    <div id="canvas-container"></div>
+    <!-- LAYER 3: OUTLINE TITLE (In Front of 3D Character, z-index: 10) -->
+    <div class="hero-title-layer title-front" aria-label="Muhammad Prima Yudhistira">
+      <div class="hero-title-container">
+        <div class="name-line name-line-1">MUHAMMAD</div>
+        <h1 class="name-line name-line-2">PRIMA</h1>
+        <div class="name-line name-line-3">YUDHISTIRA</div>
+      </div>
+    </div>
+
+    <!-- Scroll Down Cue -->
+    <a href="#about" class="scroll-cue" aria-label="Scroll to About Me Section">
+      <span class="cue-label">SCROLL TO ABOUT</span>
+      <span class="cue-arrow">↓</span>
+    </a>
 
   </main>
+
+  <!-- LAYER 2: 3D CHARACTER (Fixed in Viewport, z-index: 5) -->
+  <div id="canvas-container"></div>
+
+  <!-- ========================================================
+       ABOUT ME SECTION (Slides up over character, z-index: 30)
+       Covers the character completely as you scroll down!
+       ======================================================== -->
+  <section class="about-section" id="about">
+    <div class="about-container">
+
+      <!-- Section Header -->
+      <header class="about-header">
+        <div class="about-kicker">
+          <span class="kicker-dot"></span>
+          ABOUT ME // 2026 PORTFOLIO
+        </div>
+        <h2 class="about-headline">
+          CREATIVE DEVELOPER &<br>
+          <span class="highlight-text">SOFTWARE ENGINEERING</span> STUDENT
+        </h2>
+      </header>
+
+      <!-- Main Content Grid -->
+      <div class="about-grid">
+
+        <!-- Bio Card -->
+        <article class="about-card bio-card">
+          <span class="card-tag">BIOGRAPHY</span>
+          <p class="bio-lead">
+            Halo! Saya <strong>Muhammad Prima Yudhistira</strong>, mahasiswa <em>Software Engineering</em> di <strong>IPB University</strong> (Institut Pertanian Bogor).
+          </p>
+          <p class="bio-desc">
+            Saya fokus pada eksplorasi dan pembuatan sistem web modern dengan performa tinggi, visual 3D interaktif berbasis WebGL/Three.js, dan arsitektur kode yang bersih. Memadukan presisi rekayasa perangkat lunak dengan daya tarik estetika editorial modern.
+          </p>
+          <div class="bio-badges">
+            <span class="badge">IPB University</span>
+            <span class="badge">Software Engineering</span>
+            <span class="badge">Creative 3D Web</span>
+            <span class="badge">Fullstack Dev</span>
+          </div>
+        </article>
+
+        <!-- Overview Info Card -->
+        <article class="about-card info-card">
+          <span class="card-tag">DETAILS</span>
+          <div class="info-list">
+            <div class="info-item">
+              <span class="info-label">INSTITUSI</span>
+              <span class="info-val">IPB University (Bogor)</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">JURUSAN</span>
+              <span class="info-val">Software Engineering (Rekayasa Perangkat Lunak)</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">FOKUS UTAMA</span>
+              <span class="info-val">Web Development & 3D Interactive</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">STATUS KETERSEDIAAN</span>
+              <span class="info-val status-active"><span class="status-dot"></span>Available for Projects & Internship</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Tech Stack Card -->
+        <article class="about-card skills-card">
+          <span class="card-tag">TECH STACK & CORE SKILLS</span>
+          <div class="skills-groups">
+            <div class="skill-category">
+              <span class="cat-title">3D & Frontend Development</span>
+              <div class="skill-tags">
+                <span class="skill-tag">Three.js</span>
+                <span class="skill-tag">WebGL</span>
+                <span class="skill-tag">JavaScript (ES6+)</span>
+                <span class="skill-tag">HTML5 / Modern CSS</span>
+                <span class="skill-tag">Tailwind CSS</span>
+                <span class="skill-tag">React / Next.js</span>
+              </div>
+            </div>
+            <div class="skill-category">
+              <span class="cat-title">Backend & Software Engineering</span>
+              <div class="skill-tags">
+                <span class="skill-tag">Python</span>
+                <span class="skill-tag">Node.js</span>
+                <span class="skill-tag">RESTful APIs</span>
+                <span class="skill-tag">SQL & Relational DB</span>
+                <span class="skill-tag">Git & GitHub Workflow</span>
+                <span class="skill-tag">Algorithms & Clean Code</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Footer / Back to Top -->
+      <footer class="about-footer">
+        <div class="footer-meta">
+          <span>© 2026 MUHAMMAD PRIMA YUDHISTIRA</span>
+          <span>IPB UNIVERSITY • CREATIVE PORTFOLIO EDITION</span>
+        </div>
+        <a href="#top" class="back-to-top">
+          BACK TO TOP ↑
+        </a>
+      </footer>
+
+    </div>
+  </section>
 
   <!-- Main Application Script -->
   <script type="module" src="js/app.js"></script>

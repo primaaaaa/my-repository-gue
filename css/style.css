@@ -1,4 +1,16 @@
-/* Editorial Cream Magazine Poster Layout */
+/* ========================================================
+   Editorial High-Fashion Magazine Poster Layout
+   Featuring:
+   - Giant 3-Tier Bold Headline (MUHAMMAD / PRIMA / YUDHISTIRA)
+   - 3D Character Intersecting Sandwich Layering:
+     • LAYER 1: Solid Crimson Red Title (Behind Character, z-index: 2)
+     • LAYER 2: 3D Minecraft Character (Middle, z-index: 5, fixed)
+     • LAYER 3: Wireframe Outline Red Title (In Front of Character, z-index: 10)
+   - ABOUT ME SECTION (z-index: 30):
+     • Slides up over the character on scroll
+     • Completely covers the lower body so legs are never exposed!
+   ======================================================== */
+
 * {
   margin: 0;
   padding: 0;
@@ -7,34 +19,47 @@
 
 :root {
   --bg-cream: #f6f4f0;
-  --text-black: #0f0f12;
-  --text-muted: #4a4a50;
+  --bg-dark: #0b0e17; /* Solid Dark Midnight Navy matching blazer #262f53 */
+  --bg-card: rgba(255, 255, 255, 0.035);
+  --border-card: rgba(255, 255, 255, 0.09);
+  --text-red: #d11a2a; /* Striking High-Fashion Editorial Crimson Red */
+  --text-red-muted: #8c202a;
+  --text-cream: #f6f4f0;
+  --text-cream-muted: #9ba3b5;
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-serif: 'Playfair Display', Georgia, serif;
-  --font-sans: 'Plus Jakarta Sans', -apple-system, sans-serif;
 }
 
-html, body {
+html {
+  scroll-behavior: smooth;
+}
+
+body {
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   background-color: var(--bg-cream);
-  color: var(--text-black);
+  color: var(--text-red);
   user-select: none;
-  cursor: pointer;
 }
 
-/* Hero Section Wrapper */
+/* ========================================================
+   HERO SECTION (100vh)
+   ======================================================== */
 .hero-section {
   position: relative;
   width: 100vw;
   height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 44px 48px;
+  padding: 32px 36px;
   overflow: hidden;
   background-color: var(--bg-cream);
+  z-index: 1;
 }
 
 /* Top Centered Editorial Credits */
@@ -42,91 +67,113 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
   text-align: center;
-  z-index: 10;
+  z-index: 20;
   pointer-events: none;
-  margin-top: 4px;
-  margin-bottom: 20px;
+  margin-top: 2px;
 }
 
 .meta-block {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
   align-items: center;
 }
 
 .meta-label {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 11px;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--text-black);
+  color: var(--text-red) !important;
 }
 
 .meta-val {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-red-muted) !important;
 }
 
-/* Main Masthead Title: MY portfoliO */
-.hero-title-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  z-index: 5;
-  pointer-events: none;
-  margin-top: 8px;
-}
-
-.title-sub {
-  font-family: var(--font-sans);
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-black);
-  margin-bottom: 6px;
-}
-
-.main-title {
-  font-family: var(--font-serif);
-  font-size: clamp(4.6rem, 16vw, 15rem);
-  font-weight: 700;
-  letter-spacing: -0.035em;
-  color: var(--text-black);
-  line-height: 0.88;
-  white-space: nowrap;
-  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
-}
-
-/* Fluid Italic Editorial Ligature */
-.italic-tf {
-  font-style: italic;
-  font-weight: 600;
-}
-
-.cap-o {
-  font-size: 1.04em;
-  letter-spacing: -0.01em;
-}
-
-/* 3D Canvas Viewport (Character peeking from the bottom) */
-#canvas-container {
+/* Shared Hero Title Layer (Full Viewport Centered) */
+.hero-title-layer {
   position: absolute;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 20px;
+  pointer-events: none;
+}
+
+.hero-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1500px;
+  margin-top: 8px;
+}
+
+/* The Name Lines */
+.name-line {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+  letter-spacing: -0.04em;
+  margin: 0;
+  padding: 0;
+}
+
+/* Line 1: MUHAMMAD */
+.name-line-1 {
+  font-size: clamp(2.4rem, 8.5vw, 7.5rem);
+  line-height: 0.88;
+}
+
+/* Line 2: PRIMA (HERO CENTERPIECE - SUPER MASSIVE!) */
+.name-line-2 {
+  font-size: clamp(5.6rem, 19.5vw, 17.5rem);
+  line-height: 0.82;
+}
+
+/* Line 3: YUDHISTIRA */
+.name-line-3 {
+  font-size: clamp(2.2rem, 7.8vw, 6.8rem);
+  line-height: 0.88;
+}
+
+/* LAYER 1: SOLID RED TITLE (Behind Canvas, z-index: 2) */
+.title-back {
   z-index: 2;
+}
+
+.title-back .name-line {
+  color: var(--text-red) !important;
+  text-shadow: 0 12px 40px rgba(209, 26, 42, 0.14);
+}
+
+/* LAYER 2: 3D CANVAS VIEWPORT (Fixed to Viewport, z-index: 5) */
+#canvas-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5;
   display: block;
+  pointer-events: none;
 }
 
 canvas {
@@ -136,25 +183,401 @@ canvas {
   outline: none;
 }
 
-/* Mobile Responsiveness */
+/* LAYER 3: OUTLINE TITLE (In Front of Canvas, z-index: 10) */
+.title-front {
+  z-index: 10;
+}
+
+.title-front .name-line {
+  color: transparent !important;
+  -webkit-text-stroke: 3px var(--text-red);
+  text-stroke: 3px var(--text-red);
+  text-shadow: none !important;
+}
+
+/* Scroll Down Cue */
+.scroll-cue {
+  position: absolute;
+  bottom: 24px;
+  right: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  z-index: 22;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(209, 26, 42, 0.2);
+  transition: all 0.3s ease;
+}
+
+.scroll-cue:hover {
+  background: var(--text-red);
+  transform: translateY(2px);
+}
+
+.scroll-cue:hover .cue-label,
+.scroll-cue:hover .cue-arrow {
+  color: #ffffff;
+}
+
+.cue-label {
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--text-red);
+}
+
+.cue-arrow {
+  font-size: 13px;
+  color: var(--text-red);
+  animation: bounceDown 1.8s infinite;
+}
+
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* ========================================================
+   ABOUT ME SECTION (Slides up over character, z-index: 30)
+   Covers the character completely as you scroll down!
+   ======================================================== */
+.about-section {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--text-cream);
+  z-index: 30; /* HIGHER THAN CANVAS (5) AND TITLE (10) */
+  padding: 110px 48px 60px;
+  box-shadow: 0 -25px 60px rgba(0, 0, 0, 0.5);
+  border-top: 2px solid var(--text-red);
+  display: flex;
+  justify-content: center;
+}
+
+.about-container {
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+}
+
+/* Section Header */
+.about-header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.about-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-red);
+}
+
+.kicker-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--text-red);
+  box-shadow: 0 0 10px var(--text-red);
+}
+
+.about-headline {
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 5.5vw, 4.4rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--text-cream);
+}
+
+.highlight-text {
+  color: var(--text-red);
+  font-style: italic;
+  font-family: var(--font-serif);
+}
+
+/* Grid Layout */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 28px;
+}
+
+.about-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: 20px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  backdrop-filter: blur(12px);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.about-card:hover {
+  border-color: rgba(209, 26, 42, 0.4);
+  transform: translateY(-4px);
+}
+
+.card-tag {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-red);
+}
+
+/* Bio Card */
+.bio-lead {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--text-cream);
+}
+
+.bio-lead strong {
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.bio-desc {
+  font-family: var(--font-display);
+  font-size: 0.98rem;
+  line-height: 1.7;
+  color: var(--text-cream-muted);
+}
+
+.bio-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.badge {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  font-weight: 700;
+  background: rgba(209, 26, 42, 0.12);
+  color: #ff6b78;
+  border: 1px solid rgba(209, 26, 42, 0.3);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* Overview Info Card */
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 12px;
+}
+
+.info-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.info-label {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-cream-muted);
+}
+
+.info-val {
+  font-family: var(--font-display);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--text-cream);
+}
+
+.status-active {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #34d399;
+}
+
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #34d399;
+  box-shadow: 0 0 8px #34d399;
+}
+
+/* Skills Card (Full Width) */
+.skills-card {
+  grid-column: 1 / -1;
+}
+
+.skills-groups {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+
+.skill-category {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.cat-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-cream);
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.skill-tag {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-cream);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+}
+
+.skill-tag:hover {
+  background: var(--text-red);
+  border-color: var(--text-red);
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+/* Footer of About Section */
+.about-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 32px;
+  margin-top: 16px;
+}
+
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-cream-muted);
+}
+
+.back-to-top {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: var(--text-red);
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 999px;
+  border: 1px solid rgba(209, 26, 42, 0.3);
+  transition: all 0.3s ease;
+}
+
+.back-to-top:hover {
+  background: var(--text-red);
+  color: #ffffff;
+}
+
+/* ========================================================
+   MOBILE RESPONSIVENESS
+   ======================================================== */
+@media (max-width: 900px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .skills-card {
+    grid-column: 1;
+  }
+  .skills-groups {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-section {
-    padding: 24px 20px;
+    padding: 20px 14px;
   }
   .hero-header-center {
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 8px;
   }
   .meta-label,
   .meta-val {
-    font-size: 9.5px;
-    letter-spacing: 0.1em;
+    font-size: 9px;
+    letter-spacing: 0.08em;
   }
-  .title-sub {
-    font-size: 12px;
+  .name-line-1 {
+    font-size: clamp(1.8rem, 10vw, 3rem);
   }
-  .main-title {
-    font-size: clamp(3.2rem, 17vw, 6rem);
-    letter-spacing: -0.02em;
+  .name-line-2 {
+    font-size: clamp(4.2rem, 23vw, 7.5rem);
+  }
+  .name-line-3 {
+    font-size: clamp(1.6rem, 9vw, 2.7rem);
+  }
+  .title-front .name-line {
+    -webkit-text-stroke: 2px var(--text-red);
+    text-stroke: 2px var(--text-red);
+  }
+  .scroll-cue {
+    right: 20px;
+    bottom: 16px;
+    padding: 6px 12px;
+  }
+  .about-section {
+    padding: 70px 20px 40px;
+  }
+  .about-card {
+    padding: 24px;
+  }
+  .about-footer {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
   }
 }
