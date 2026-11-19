@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Portfolio</title>
+
+  <!-- Google Fonts: Playfair Display (Editorial High-Fashion Serif) & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,500;1,600;1,700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Three.js Import Map (Local offline-first) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./js/vendor/three.module.js",
+        "three/addons/controls/OrbitControls.js": "./js/vendor/OrbitControls.js"
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <!-- Editorial Hero Section (Cream Minimalist Poster) -->
+  <main class="hero-section">
+
+    <!-- Top Centered Metadata -->
+    <header class="hero-header-center">
+      <div class="meta-block">
+        <span class="meta-label">MUHAMMAD PRIMA YUDHISTIRA</span>
+        <span class="meta-val">FULLSTACK DEVELOPER</span>
+      </div>
+      <div class="meta-block">
+        <span class="meta-label">IPB UNIVERSITY</span>
+        <span class="meta-val">SOFTWARE ENGINEERING</span>
+      </div>
+    </header>
+
+    <!-- Center Editorial Masthead: MY portfoliO -->
+    <div class="hero-title-container">
+      <div class="title-sub">MY</div>
+      <h1 class="main-title">
+        por<span class="italic-tf">tf</span>oli<span class="cap-o">O</span>
+      </h1>
+    </div>
+
+    <!-- 3D Canvas Viewport (Character peeking up from the bottom) -->
+    <div id="canvas-container"></div>
+
+  </main>
+
+  <!-- Main Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
