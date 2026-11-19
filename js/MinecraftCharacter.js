@@ -25,6 +25,13 @@ export class MinecraftCharacter {
     this.waveTimer = 0;
     this.waveDuration = 2.4; // Seconds to complete wave cycle
 
+    // Outfit Switching Spin animation state
+    this.isSpinning = false;
+    this.spinTimer = 0;
+    this.spinDuration = 0.75;
+    this.baseRotationY = 0;
+    this.basePositionY = 0;
+
     // Head tracking angles (interpolated)
     this.targetYaw = 0;
     this.targetPitch = 0;
@@ -382,6 +389,41 @@ export class MinecraftCharacter {
   }
 
   /**
+   * Set dynamic outfit texture ('ipb' vs 'smk')
+   */
+  setOutfit(newCanvas, outfit = 'ipb') {
+    this.skinCanvas = newCanvas;
+    if (this.texture) {
+      this.texture.dispose();
+    }
+    this.texture = new THREE.CanvasTexture(newCanvas);
+    this.texture.magFilter = THREE.LinearFilter;
+    this.texture.minFilter = THREE.LinearMipmapLinearFilter;
+    this.texture.generateMipmaps = true;
+    this.bodyMaterial.map = this.texture;
+    this.bodyMaterial.needsUpdate = true;
+
+    if (this.shoeMaterial) {
+      if (outfit === 'smk') {
+        this.shoeMaterial.color.set('#18181b'); // Black school shoes
+      } else {
+        this.shoeMaterial.color.set('#ffffff'); // White sneakers
+      }
+      this.shoeMaterial.needsUpdate = true;
+    }
+  }
+
+  /**
+   * Trigger 360-degree costume switch spin with a playful hop
+   */
+  triggerSpin() {
+    this.isSpinning = true;
+    this.spinTimer = 0;
+    this.baseRotationY = this.group.rotation.y;
+    this.basePositionY = this.group.position.y;
+  }
+
+  /**
    * Trigger waving animation on user click
    */
   triggerWave() {
@@ -389,7 +431,32 @@ export class MinecraftCharacter {
     this.waveTimer = 0;
   }
 
+  /**
+   * Set half-body bust mode (hides legs so only upper body / waist-up is rendered)
+   */
+  setHalfBodyMode(enabled) {
+    if (this.rightLegGroup) this.rightLegGroup.visible = !enabled;
+    if (this.leftLegGroup) this.leftLegGroup.visible = !enabled;
+  }
+
   update(delta, time) {
+    // ------------------------------------------------------------------
+    // 0. COSTUME SWITCH SPIN & HOP ANIMATION
+    // ------------------------------------------------------------------
+    if (this.isSpinning) {
+      this.spinTimer += delta;
+      const t = Math.min(1, this.spinTimer / this.spinDuration);
+      const ease = 1 - Math.pow(1 - t, 3);
+      this.group.rotation.y = this.baseRotationY + ease * Math.PI * 2;
+      this.group.position.y = this.basePositionY + Math.sin(t * Math.PI) * 0.12;
+
+      if (t >= 1) {
+        this.isSpinning = false;
+        this.group.rotation.y = this.baseRotationY;
+        this.group.position.y = this.basePositionY;
+      }
+    }
+
     // ------------------------------------------------------------------
     // 1. POSITION STABLE (Torso locked at hips, no idle bobbing)
     // ------------------------------------------------------------------
