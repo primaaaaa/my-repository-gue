@@ -381,23 +381,17 @@ class App {
       }
     }
 
-    // 3. Smooth Fade Update for Cards (Both Desktop & Mobile Unified Card)
-    const infoCard = document.getElementById('eduInfoCard');
-    const achieveCard = document.getElementById('eduAchieveCard');
-    const mobileCard = document.getElementById('eduMobileCard');
-
-    if (infoCard) infoCard.classList.add('is-updating');
-    if (achieveCard) achieveCard.classList.add('is-updating');
-    if (mobileCard) mobileCard.classList.add('is-updating');
+    // 3. Smooth Fade Update for Unified Card
+    const unifiedCard = document.getElementById('eduUnifiedCard');
+    if (unifiedCard) unifiedCard.classList.add('is-updating');
 
     setTimeout(() => {
-      // Desktop elements
       const schoolName = document.getElementById('eduSchoolName');
       const majorTitle = document.getElementById('eduMajorTitle');
       const periodText = document.getElementById('eduPeriodText');
       const summaryDesc = document.getElementById('eduSummaryDesc');
       const locationText = document.getElementById('eduLocationText');
-      const achieveTitle = document.getElementById('eduAchieveTitle');
+      const tabPengalamanText = document.getElementById('eduTabPengalamanText');
       const achieveList = document.getElementById('eduAchieveList');
 
       if (schoolName) schoolName.textContent = data.schoolName;
@@ -405,7 +399,7 @@ class App {
       if (periodText) periodText.textContent = data.period;
       if (summaryDesc) summaryDesc.textContent = data.summary;
       if (locationText) locationText.textContent = data.location;
-      if (achieveTitle) achieveTitle.textContent = data.achieveTitle;
+      if (tabPengalamanText) tabPengalamanText.textContent = data.achieveTitle;
 
       const itemsHtml = data.achievements.map((item) => `
         <li class="achieve-item">
@@ -418,28 +412,7 @@ class App {
         achieveList.innerHTML = itemsHtml;
       }
 
-      // Mobile unified card elements
-      const mSchoolName = document.getElementById('eduMSchoolName');
-      const mMajorTitle = document.getElementById('eduMMajorTitle');
-      const mPeriodText = document.getElementById('eduMPeriodText');
-      const mSummaryDesc = document.getElementById('eduMSummaryDesc');
-      const mLocationText = document.getElementById('eduMLocationText');
-      const mAchieveList = document.getElementById('eduMAchieveList');
-      const mTabAchieveText = document.getElementById('eduMTabAchieveText');
-
-      if (mSchoolName) mSchoolName.textContent = data.schoolName;
-      if (mMajorTitle) mMajorTitle.textContent = data.major;
-      if (mPeriodText) mPeriodText.textContent = data.period;
-      if (mSummaryDesc) mSummaryDesc.textContent = data.summary;
-      if (mLocationText) mLocationText.textContent = data.location;
-      if (mTabAchieveText) mTabAchieveText.textContent = data.achieveTitle;
-      if (mAchieveList) {
-        mAchieveList.innerHTML = itemsHtml;
-      }
-
-      if (infoCard) infoCard.classList.remove('is-updating');
-      if (achieveCard) achieveCard.classList.remove('is-updating');
-      if (mobileCard) mobileCard.classList.remove('is-updating');
+      if (unifiedCard) unifiedCard.classList.remove('is-updating');
     }, 180);
   }
 
@@ -635,44 +608,48 @@ class App {
       }, { passive: true });
     }
 
-    // Mobile Unified Card Carousel & Panel Tabs
-    const mTrack = document.getElementById('eduMCarouselTrack');
-    const mTabInfo = document.getElementById('eduMTabInfo');
-    const mTabAchieve = document.getElementById('eduMTabAchieve');
-    const mViewport = document.getElementById('eduMCarouselViewport');
+    // Education Card Tab Switcher: Rincian vs Pengalaman & Organisasi
+    // Ensures strictly ONE panel is visible at a time (occupying 100% full width)
+    const tabRincian = document.getElementById('eduTabRincian');
+    const tabPengalaman = document.getElementById('eduTabPengalaman');
+    const panelInfo = document.getElementById('eduPanelInfo');
+    const panelAchieve = document.getElementById('eduPanelAchieve');
+    const cardBody = document.getElementById('eduCardBody');
 
-    const setMobileSlide = (slideIndex) => {
-      if (mTrack) {
-        mTrack.style.transform = slideIndex === 1 ? 'translateX(-50%)' : 'translateX(0%)';
-      }
-      if (mTabInfo && mTabAchieve) {
-        if (slideIndex === 0) {
-          mTabInfo.classList.add('active');
-          mTabInfo.setAttribute('aria-selected', 'true');
-          mTabAchieve.classList.remove('active');
-          mTabAchieve.setAttribute('aria-selected', 'false');
-        } else {
-          mTabAchieve.classList.add('active');
-          mTabAchieve.setAttribute('aria-selected', 'true');
-          mTabInfo.classList.remove('active');
-          mTabInfo.setAttribute('aria-selected', 'false');
-        }
+    const switchEduTab = (tabName) => {
+      if (!tabRincian || !tabPengalaman || !panelInfo || !panelAchieve) return;
+      if (tabName === 'info') {
+        tabRincian.classList.add('active');
+        tabRincian.setAttribute('aria-selected', 'true');
+        tabPengalaman.classList.remove('active');
+        tabPengalaman.setAttribute('aria-selected', 'false');
+
+        panelInfo.classList.add('active');
+        panelAchieve.classList.remove('active');
+      } else {
+        tabPengalaman.classList.add('active');
+        tabPengalaman.setAttribute('aria-selected', 'true');
+        tabRincian.classList.remove('active');
+        tabRincian.setAttribute('aria-selected', 'false');
+
+        panelAchieve.classList.add('active');
+        panelInfo.classList.remove('active');
       }
     };
 
-    if (mTabInfo) {
-      mTabInfo.addEventListener('click', () => setMobileSlide(0));
+    if (tabRincian) {
+      tabRincian.addEventListener('click', () => switchEduTab('info'));
     }
-    if (mTabAchieve) {
-      mTabAchieve.addEventListener('click', () => setMobileSlide(1));
+    if (tabPengalaman) {
+      tabPengalaman.addEventListener('click', () => switchEduTab('achieve'));
     }
 
-    if (mViewport) {
+    if (cardBody) {
       let touchStartX = 0;
       let touchStartY = 0;
       let isHorizontalSwipe = false;
 
-      mViewport.addEventListener('touchstart', (e) => {
+      cardBody.addEventListener('touchstart', (e) => {
         if (e.touches.length > 0) {
           touchStartX = e.touches[0].clientX;
           touchStartY = e.touches[0].clientY;
@@ -680,7 +657,7 @@ class App {
         }
       }, { passive: true });
 
-      mViewport.addEventListener('touchmove', (e) => {
+      cardBody.addEventListener('touchmove', (e) => {
         if (e.touches.length > 0) {
           const dx = e.touches[0].clientX - touchStartX;
           const dy = e.touches[0].clientY - touchStartY;
@@ -690,13 +667,13 @@ class App {
         }
       }, { passive: true });
 
-      mViewport.addEventListener('touchend', (e) => {
+      cardBody.addEventListener('touchend', (e) => {
         if (isHorizontalSwipe && e.changedTouches.length > 0) {
           const dx = e.changedTouches[0].clientX - touchStartX;
           if (dx < -35) {
-            setMobileSlide(1); // Swipe left -> Pengalaman
+            switchEduTab('achieve'); // Swipe left -> Pengalaman
           } else if (dx > 35) {
-            setMobileSlide(0); // Swipe right -> Ringkasan
+            switchEduTab('info');    // Swipe right -> Rincian
           }
         }
       }, { passive: true });

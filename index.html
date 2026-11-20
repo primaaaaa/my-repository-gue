@@ -15,7 +15,7 @@
     rel="stylesheet">
 
   <!-- Cache-busting query parameter so browser always loads latest styles -->
-  <link rel="stylesheet" href="css/style.css?v=20261120-newkeychains-v40">
+  <link rel="stylesheet" href="css/style.css?v=20261120-tabsfix-v42">
 
   <!-- Three.js Import Map (Local offline-first) -->
   <script type="importmap">
@@ -1602,34 +1602,87 @@
         </div>
       </header>
 
-      <!-- Main Interactive 3D Showcase: Left Info | Center 3D Stage | Right Achievements -->
+      <!-- Main Interactive 3D Showcase: Left Unified Card (2 Tabs) | Right 3D Stage -->
       <div class="education-showcase">
 
-        <!-- Column 1: Institution & Program Details Card -->
-        <div class="edu-col edu-col-info">
-          <div class="edu-card edu-info-card" id="eduInfoCard">
-            <h3 class="edu-school-name" id="eduSchoolName">IPB University</h3>
-            <div class="edu-major-title" id="eduMajorTitle">D4 Teknologi Rekayasa Perangkat Lunak</div>
-            <div class="edu-period-pill" id="eduPeriodPill">
-              <span class="period-dot"></span>
-              <span id="eduPeriodText">2024 — 2028 (Aktif)</span>
+        <!-- Column 1 (Left): Unified Information & Experience Card with 2 Tabs -->
+        <div class="edu-col edu-col-card">
+          <div class="edu-card edu-unified-card" id="eduUnifiedCard">
+
+            <!-- Pinned Fixed Header: School, Major, Period & Sub-tab Switcher (Never scrolls!) -->
+            <div class="edu-card-header">
+              <div class="edu-header-main">
+                <div class="edu-title-group">
+                  <h3 class="edu-school-name" id="eduSchoolName">IPB University</h3>
+                  <div class="edu-major-title" id="eduMajorTitle">D4 Teknologi Rekayasa Perangkat Lunak</div>
+                </div>
+                <div class="edu-period-pill" id="eduPeriodPill">
+                  <span class="period-dot"></span>
+                  <span id="eduPeriodText">2024 — 2028 (Aktif)</span>
+                </div>
+              </div>
+
+              <!-- Two Sub-tabs: Rincian vs Pengalaman & Organisasi -->
+              <div class="edu-panel-tabs" role="tablist" aria-label="Pilih panel informasi">
+                <button type="button" class="edu-panel-tab-btn active" id="eduTabRincian" role="tab"
+                  aria-selected="true" aria-controls="eduPanelInfo">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span>Rincian</span>
+                </button>
+                <button type="button" class="edu-panel-tab-btn" id="eduTabPengalaman" role="tab"
+                  aria-selected="false" aria-controls="eduPanelAchieve">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                    <path d="M4 22h16"></path>
+                    <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
+                    <path d="M18 4H6v7a6 6 0 0 0 12 0V4z"></path>
+                  </svg>
+                  <span id="eduTabPengalamanText">Pengalaman & Organisasi</span>
+                </button>
+              </div>
             </div>
-            <p class="edu-summary-desc" id="eduSummaryDesc">
-              Fokus mendalam pada rekayasa perangkat lunak modern, arsitektur aplikasi web terdistribusi, visual 3D
-              interaktif, dan kepemimpinan kreatif.
-            </p>
-            <div class="edu-location-meta">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-              <span id="eduLocationText">Bogor, Jawa Barat</span>
+
+            <!-- Card Content Area: ONLY the active tab's content is displayed! -->
+            <div class="edu-card-body" id="eduCardBody">
+
+              <!-- Tab Panel 1: Rincian (Active by default, occupies 100% full width) -->
+              <div class="edu-tab-panel edu-panel-info active" id="eduPanelInfo" role="tabpanel" aria-labelledby="eduTabRincian">
+                <p class="edu-summary-desc" id="eduSummaryDesc">
+                  Fokus mendalam pada rekayasa perangkat lunak modern, arsitektur aplikasi web terdistribusi, visual 3D
+                  interaktif, dan kepemimpinan kreatif.
+                </p>
+                <div class="edu-location-meta">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span id="eduLocationText">Bogor, Jawa Barat</span>
+                </div>
+              </div>
+
+              <!-- Tab Panel 2: Pengalaman & Organisasi (Occupies 100% full width when active) -->
+              <div class="edu-tab-panel edu-panel-achieve" id="eduPanelAchieve" role="tabpanel" aria-labelledby="eduTabPengalaman">
+                <div class="edu-achieve-scroll" id="eduAchieveScroll">
+                  <ul class="achieve-list" id="eduAchieveList">
+                    <!-- Dynamically populated via JS -->
+                  </ul>
+                </div>
+              </div>
+
             </div>
+
           </div>
         </div>
 
-        <!-- Column 2: Center 3D Stage (Full-body Minecraft Character with Costume Switch) -->
+        <!-- Column 2 (Right): 3D Character Stage (Full-body Minecraft Character with Costume Switch) -->
         <div class="edu-col edu-col-stage">
           <div class="edu-stage-wrapper" id="eduStageWrapper">
             <!-- 3D Canvas Box -->
@@ -1657,111 +1710,15 @@
               </svg>
             </button>
           </div>
-        </div>
 
-        <!-- Column 3: Experience & Organization / Achievements Card (Desktop) -->
-        <div class="edu-col edu-col-achievements">
-          <div class="edu-card edu-achieve-card" id="eduAchieveCard">
-            <div class="achieve-card-header">
-              <div class="achieve-header-icon" aria-hidden="true">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                  <path d="M4 22h16"></path>
-                  <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
-                  <path d="M18 4H6v7a6 6 0 0 0 12 0V4z"></path>
-                </svg>
-              </div>
-              <h4 class="achieve-header-title" id="eduAchieveTitle">Pengalaman & Organisasi</h4>
-            </div>
-
-            <ul class="achieve-list" id="eduAchieveList">
-              <!-- Dynamically populated via JS -->
-            </ul>
+          <!-- Drag Hint Text -->
+          <div class="edu-stage-hint">
+            <svg class="hint-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+            <span>Drag 360° untuk putar karakter</span>
           </div>
-        </div>
-
-        <!-- Mobile Unified Interactive Card (Visible on <= 900px, hidden on desktop) -->
-        <div class="edu-mobile-unified-card" id="eduMobileCard">
-
-          <!-- Pinned Fixed Header: School, Major, Period & Panel Tabs (Never scrolls!) -->
-          <div class="edu-m-card-header">
-            <div class="edu-m-header-main">
-              <div class="edu-m-title-group">
-                <h3 class="edu-m-school-name" id="eduMSchoolName">IPB University</h3>
-                <div class="edu-m-major-title" id="eduMMajorTitle">D4 Teknologi Rekayasa Perangkat Lunak</div>
-              </div>
-              <div class="edu-m-period-pill" id="eduMPeriodPill">
-                <span class="period-dot"></span>
-                <span id="eduMPeriodText">2024 — 2028 (Aktif)</span>
-              </div>
-            </div>
-
-            <!-- Panel Switcher Tabs (Slide 1: Ringkasan vs Slide 2: Pengalaman) -->
-            <div class="edu-m-panel-tabs" role="tablist" aria-label="Pilih panel informasi">
-              <button type="button" class="edu-m-tab-btn active" id="eduMTabInfo" data-slide="0" role="tab"
-                aria-selected="true">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="16" x2="12" y2="12"></line>
-                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                </svg>
-                <span>Ringkasan</span>
-              </button>
-              <button type="button" class="edu-m-tab-btn" id="eduMTabAchieve" data-slide="1" role="tab"
-                aria-selected="false">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                  stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
-                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
-                  <path d="M4 22h16"></path>
-                  <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
-                  <path d="M18 4H6v7a6 6 0 0 0 12 0V4z"></path>
-                </svg>
-                <span id="eduMTabAchieveText">Pengalaman & Organisasi</span>
-              </button>
-              <span class="edu-m-swipe-tip">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                  stroke-linecap="round" stroke-linejoin="round">
-                </svg>
-              </span>
-            </div>
-          </div>
-
-          <!-- Carousel Viewport: Swipes Horizontally between Slide 1 and Slide 2 -->
-          <div class="edu-m-carousel-viewport" id="eduMCarouselViewport">
-            <div class="edu-m-carousel-track" id="eduMCarouselTrack">
-
-              <!-- Slide 1: Ringkasan Program & Lokasi -->
-              <div class="edu-m-slide edu-m-slide-info" id="eduMSlideInfo">
-                <p class="edu-m-summary-desc" id="eduMSummaryDesc">
-                  Fokus mendalam pada rekayasa perangkat lunak modern, arsitektur aplikasi web terdistribusi, visual 3D
-                  interaktif, dan kepemimpinan kreatif.
-                </p>
-                <div class="edu-m-location-meta">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                    stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  <span id="eduMLocationText">Bogor, Jawa Barat</span>
-                </div>
-              </div>
-
-              <!-- Slide 2: Pengalaman & Organisasi (ONLY this list scrolls vertically!) -->
-              <div class="edu-m-slide edu-m-slide-achieve" id="eduMSlideAchieve">
-                <div class="edu-m-scroll-body" id="eduMScrollBody">
-                  <ul class="achieve-list" id="eduMAchieveList">
-                    <!-- Dynamically populated via JS -->
-                  </ul>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
         </div>
 
       </div>
@@ -1769,7 +1726,7 @@
   </section>
 
   <!-- Main Application Script -->
-  <script type="module" src="js/app.js?v=20261120-newkeychains-v40"></script>
+  <script type="module" src="js/app.js?v=20261120-tabsfix-v42"></script>
 </body>
 
 </html>

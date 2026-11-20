@@ -1482,73 +1482,86 @@ body {
   letter-spacing: 0.06em;
 }
 
-/* 3-Column Showcase */
+/* 2-Column Showcase: Left Unified Card (1.15fr) | Right 3D Stage (0.85fr) */
 .education-showcase {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(320px, 420px) minmax(300px, 1.2fr);
-  gap: clamp(20px, 3vw, 40px);
+  grid-template-columns: minmax(360px, 1.15fr) minmax(320px, 0.85fr);
+  gap: clamp(28px, 4vw, 56px);
   align-items: center;
 }
 
-/* Base Card Style: Scrollable with Sleek Scrollbar */
+.edu-col-card {
+  min-width: 0;
+}
+
+/* Base Card Style: Glassmorphism */
 .edu-card {
   background: rgba(255, 255, 255, 0.1);
   border: 1.5px solid rgba(255, 255, 255, 0.25);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 24px;
-  padding: clamp(22px, 3vw, 34px);
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
   transition: opacity 0.35s ease, transform 0.35s ease;
-  max-height: 480px;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.45) rgba(255, 255, 255, 0.05);
 }
 
-.edu-card::-webkit-scrollbar {
-  width: 5px;
+.edu-unified-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 420px;
+  height: 440px;
+  padding: clamp(24px, 3vw, 32px);
+  overflow: hidden;
+  position: relative;
 }
 
-.edu-card::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 999px;
-}
-
-.edu-card::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 999px;
-}
-
-.edu-card::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.7);
-}
-
-.edu-card.is-updating {
+.edu-unified-card.is-updating {
   opacity: 0;
   transform: translateY(10px);
 }
 
-/* Column 1: Info Card */
+/* Fixed Pinned Header: School, Major, Period & Sub-tab Switcher (Never scrolls!) */
+.edu-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 16px;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.2);
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.edu-header-main {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.edu-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
 .edu-school-name {
   font-family: var(--font-display);
-  font-size: clamp(1.8rem, 3.2vw, 2.5rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.25rem);
   font-weight: 900;
   line-height: 1.05;
   letter-spacing: -0.03em;
   color: #ffffff;
-  margin-bottom: 8px;
+  margin: 0;
 }
 
 .edu-major-title {
   font-family: var(--font-display);
-  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  font-size: clamp(0.96rem, 1.4vw, 1.15rem);
   font-weight: 700;
   color: #fff0f0;
-  line-height: 1.4;
-  margin-bottom: 16px;
+  line-height: 1.35;
+  margin: 0;
 }
 
 .edu-period-pill {
@@ -1563,7 +1576,8 @@ body {
   font-size: 11.5px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  margin-bottom: 18px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .period-dot {
@@ -1573,16 +1587,96 @@ body {
   background: var(--text-red);
 }
 
+/* Two Sub-tabs: Rincian vs Pengalaman & Organisasi */
+.edu-panel-tabs {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+}
+
+.edu-panel-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.edu-panel-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.26);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.edu-panel-tab-btn.active {
+  background: #ffffff;
+  color: var(--text-red);
+  border-color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Content Area / Tab Panels: ONLY active tab panel is visible! */
+.edu-card-body {
+  width: 100%;
+  flex: 1;
+  position: relative;
+  min-height: 220px;
+  display: flex;
+  flex-direction: column;
+}
+
+.edu-tab-panel {
+  display: none;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+.edu-tab-panel.active {
+  display: flex;
+  flex-direction: column;
+  animation: eduTabFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes eduTabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Panel 1: Rincian (100% Full Width) */
+.edu-panel-info {
+  gap: 16px;
+  justify-content: flex-start;
+}
+
 .edu-summary-desc {
   font-family: var(--font-display);
-  font-size: clamp(0.92rem, 1.3vw, 1.05rem);
+  font-size: clamp(0.95rem, 1.25vw, 1.05rem);
   line-height: 1.65;
-  color: rgba(255, 255, 255, 0.92);
-  margin-bottom: 20px;
+  color: rgba(255, 255, 255, 0.94);
+  margin: 0;
 }
 
 .edu-location-meta {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   font-family: var(--font-display);
@@ -1590,7 +1684,41 @@ body {
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Panel 2: Pengalaman & Organisasi (100% Full Width, ONLY this list scrolls vertically!) */
+.edu-panel-achieve {
+  justify-content: flex-start;
+}
+
+.edu-achieve-scroll {
+  flex: 1;
+  max-height: 250px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.45) rgba(255, 255, 255, 0.05);
+}
+
+.edu-achieve-scroll::-webkit-scrollbar {
+  width: 5px;
+}
+
+.edu-achieve-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 999px;
+}
+
+.edu-achieve-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+}
+
+.edu-achieve-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.7);
 }
 
 /* Column 2: Center 3D Stage */
@@ -1712,43 +1840,6 @@ body {
   flex-shrink: 0;
 }
 
-/* Column 3: Achievements & Experience */
-.achieve-card-header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding-bottom: 16px;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.2);
-  margin-bottom: 20px;
-}
-
-.achieve-header-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.18);
-  color: #ffffff;
-  flex-shrink: 0;
-}
-
-.achieve-header-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.achieve-header-title {
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #ffffff;
-  margin: 0;
-}
-
 .achieve-list {
   list-style: none;
   display: flex;
@@ -1818,29 +1909,8 @@ body {
   transform: translateY(-2px);
 }
 
-/* Base: Mobile Unified Interactive Card hidden on desktop */
-.edu-mobile-unified-card {
-  display: none;
-}
-
 /* Responsiveness */
-@media (max-width: 1024px) {
-  .education-showcase {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "stage stage"
-      "info  achieve";
-  }
-
-  .edu-col-stage { grid-area: stage; }
-  .edu-col-info  { grid-area: info; }
-  .edu-col-achievements { grid-area: achieve; }
-
-  .edu-prev-btn { left: 10px; }
-  .edu-next-btn { right: 10px; }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .education-section {
     padding: 40px 16px 55px;
   }
@@ -1901,7 +1971,7 @@ body {
     opacity: 0.85;
   }
 
-  /* Showcase Mobile: Single Unified Card Layout */
+  /* Showcase Mobile: 3D Stage on top, Unified Card below */
   .education-showcase {
     display: flex;
     flex-direction: column;
@@ -1911,6 +1981,7 @@ body {
   }
 
   .edu-col-stage {
+    order: 1;
     width: 100%;
   }
 
@@ -1948,243 +2019,91 @@ body {
     margin-top: 4px;
   }
 
-  /* Hide separate desktop columns on mobile */
-  .edu-col-info,
-  .edu-col-achievements {
-    display: none !important;
-  }
-
-  /* Single Unified Interactive Card */
-  .edu-mobile-unified-card {
-    display: flex !important;
-    flex-direction: column;
+  .edu-col-card {
+    order: 2;
     width: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1.5px solid rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-radius: 20px;
+  }
+
+  .edu-unified-card {
+    min-height: auto;
+    height: auto;
     padding: 16px 16px 14px;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
-    overflow: hidden;
-    position: relative;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    border-radius: 20px;
   }
 
-  .edu-mobile-unified-card.is-updating {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-
-  /* Fixed Pinned Header (Does NOT scroll) */
-  .edu-m-card-header {
-    display: flex;
-    flex-direction: column;
+  .edu-card-header {
     gap: 10px;
     padding-bottom: 10px;
-    border-bottom: 1.5px solid rgba(255, 255, 255, 0.18);
     margin-bottom: 10px;
-    flex-shrink: 0;
   }
 
-  .edu-m-header-main {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .edu-m-title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    min-width: 0;
-  }
-
-  .edu-m-school-name {
-    font-family: var(--font-display);
+  .edu-school-name {
     font-size: 1.35rem;
-    font-weight: 900;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
-    color: #ffffff;
-    margin: 0;
   }
 
-  .edu-m-major-title {
-    font-family: var(--font-display);
+  .edu-major-title {
     font-size: 0.88rem;
-    font-weight: 700;
-    color: #fff0f0;
-    line-height: 1.35;
-    margin: 0;
   }
 
-  .edu-m-period-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #ffffff;
-    color: var(--text-red);
+  .edu-period-pill {
     padding: 3px 9px;
-    border-radius: 999px;
-    font-family: var(--font-display);
     font-size: 9.5px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    white-space: nowrap;
-    flex-shrink: 0;
   }
 
-  /* Sub-tab Switcher Pills */
-  .edu-m-panel-tabs {
-    display: flex;
-    align-items: center;
+  .edu-panel-tabs {
     gap: 8px;
-    position: relative;
   }
 
-  .edu-m-tab-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+  .edu-panel-tab-btn {
     padding: 5px 12px;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, 0.14);
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    color: rgba(255, 255, 255, 0.9);
-    font-family: var(--font-display);
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    cursor: pointer;
-    transition: all 0.22s ease;
-    outline: none;
-    -webkit-tap-highlight-color: transparent;
+    gap: 6px;
   }
 
-  .edu-m-tab-btn.active {
-    background: #ffffff;
-    color: var(--text-red);
-    border-color: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  .edu-panel-tab-btn svg {
+    width: 13px;
+    height: 13px;
   }
 
-  .edu-m-swipe-tip {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-family: var(--font-display);
-    font-size: 9.5px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    color: rgba(255, 255, 255, 0.65);
-    text-transform: uppercase;
-  }
-
-  /* Carousel Track & Viewport */
-  .edu-m-carousel-viewport {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .edu-m-carousel-track {
-    display: flex;
-    width: 200%;
-    transform: translateX(0%);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
-  }
-
-  .edu-m-slide {
-    width: 50%;
-    flex-shrink: 0;
-    min-height: 140px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-  }
-
-  /* Slide 1: Info */
-  .edu-m-slide-info {
-    padding-right: 12px;
-    gap: 10px;
-  }
-
-  .edu-m-summary-desc {
-    font-family: var(--font-display);
+  .edu-summary-desc {
     font-size: 0.88rem;
     line-height: 1.55;
-    color: rgba(255, 255, 255, 0.92);
-    margin: 0;
   }
 
-  .edu-m-location-meta {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-display);
+  .edu-location-meta {
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.82);
+    gap: 6px;
   }
 
-  /* Slide 2: Scrollable Achievements List ONLY */
-  .edu-m-slide-achieve {
-    padding-left: 2px;
-  }
-
-  .edu-m-scroll-body {
-    max-height: 160px;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
+  .edu-achieve-scroll {
+    max-height: 165px;
     padding-right: 6px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.45) rgba(255, 255, 255, 0.05);
   }
 
-  .edu-m-scroll-body::-webkit-scrollbar {
-    width: 4px;
-  }
-
-  .edu-m-scroll-body::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 999px;
-  }
-
-  .edu-m-scroll-body::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.4);
-    border-radius: 999px;
-  }
-
-  .edu-m-scroll-body .achieve-list {
+  .edu-achieve-scroll .achieve-list {
     gap: 10px;
   }
 
-  .edu-m-scroll-body .achieve-item {
+  .edu-achieve-scroll .achieve-item {
     gap: 2px;
     padding-left: 16px;
   }
 
-  .edu-m-scroll-body .achieve-item::before {
+  .edu-achieve-scroll .achieve-item::before {
     top: 5px;
     width: 6px;
     height: 6px;
   }
 
-  .edu-m-scroll-body .achieve-item-title {
+  .edu-achieve-scroll .achieve-item-title {
     font-size: 0.88rem;
     line-height: 1.35;
   }
 
-  .edu-m-scroll-body .achieve-item-sub {
+  .edu-achieve-scroll .achieve-item-sub {
     font-size: 10.5px;
   }
 }
+
 
 
