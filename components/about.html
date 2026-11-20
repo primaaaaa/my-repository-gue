@@ -1,0 +1,89 @@
+  <!-- ========================================================
+       SECTION 2: ABOUT ME (Tentang Saya)
+       - Solid Crimson Red Background (#d11a2a)
+       - Pure White Typography (#ffffff)
+       - Clean Editorial Paragraphs Only (Cards removed)
+       - Character framed gracefully inside Portrait Glass Frame on the Right
+       ======================================================== -->
+  <section class="about-section" id="about">
+    <div class="about-container">
+
+      <!-- Header Group: Kicker & Title -->
+      <div class="about-header-group">
+        <!-- Kicker (Clean Typography without filler pill) -->
+        <div class="about-kicker">
+          <span>MUHAMMAD PRIMA YUDHISTIRA</span>
+          <span class="kicker-divider">•</span>
+          <span>IPB University</span>
+        </div>
+
+        <!-- Giant Title "Tentang Saya" -->
+        <h2 class="about-title">
+          Tentang<br>Saya
+        </h2>
+      </div>
+
+      <!-- Stage Right: Dedicated Portrait Showcase Frame for 3D Character -->
+      <!-- On desktop: clean rectangle (persegi panjang) -->
+      <!-- On mobile: clean square (persegi) beside "Tentang Saya" -->
+      <div class="about-stage-right">
+        <!-- 1. Back Layer: Frame Room Backdrop, Floor Shadow & 3D Character Canvas (Directly embedded inside frame, z-index: 2) -->
+        <div class="about-frame-wrapper" id="aboutFrame">
+          <div class="frame-floor-shadow"></div>
+          <canvas id="aboutCanvas" class="about-3d-canvas"></canvas>
+        </div>
+
+        <!-- 2. Front Layer: Glass Window, Ambient Occlusion, Specular Glare & Bottom Window Sill (In Front of 3D Character, z-index: 10) -->
+        <!-- Visibly overlaps ("menimpa") the 3D character with deep inner shading, glass reflections, and bottom window sill! -->
+        <div class="about-frame-front" id="aboutFrameFront" aria-hidden="true">
+          <!-- Glass Specular Reflection Streak -->
+          <div class="frame-glass-glare"></div>
+
+          <!-- Clean Bottom Window Sill (Visibly overlaps hands & waist) -->
+          <div class="frame-bottom-sill"></div>
+        </div>
+      </div>
+
+      <!-- Bio Group: Paragraphs & Interests Footer -->
+      <!-- On desktop: sits directly below header in left column -->
+      <!-- On mobile: spans full width below the header & frame -->
+      <div class="about-bio-group">
+        <div class="about-bio-text">
+          <p class="bio-main">
+            <strong>Mahasiswa Teknologi Rekayasa Perangkat Lunak di Sekolah Vokasi IPB University</strong> dengan minat
+            mendalam pada <em>Web Development</em> dan <em>Project Management</em>. Berpengalaman merancang serta
+            membangun aplikasi web yang responsif dan interaktif menggunakan teknologi modern, serta terbiasa
+            berkolaborasi dalam tim dengan pendekatan Agile untuk menyelesaikan proyek secara terstruktur dan tepat
+            waktu.
+          </p>
+          <p class="bio-sub">
+            Selalu antusias mempelajari teknologi baru dan siap berkontribusi dalam lingkungan pengembangan yang
+            dinamis—mulai dari perencanaan alur kerja, komunikasi tim, kepemimpinan proyek, hingga eksekusi fitur
+            perangkat lunak secara <em>end-to-end</em> dengan pemecahan masalah yang efektif.
+          </p>
+        </div>
+
+        <!-- Footer: Interest & Soft Skills Badges (Clean Typography without unnecessary icons) -->
+        <footer class="about-footer">
+          <div class="about-footer-row">
+            <div class="about-badge-category">
+              <span class="about-category-label">MINAT & FOKUS</span>
+              <div class="about-badges-list">
+                <span class="interest-badge">Web Development</span>
+                <span class="interest-badge">Project Manager</span>
+                <span class="interest-badge">Photography</span>
+              </div>
+            </div>
+            <div class="about-badge-category">
+              <span class="about-category-label">SOFT SKILLS</span>
+              <div class="about-badges-list">
+                <span class="interest-badge">Komunikasi</span>
+                <span class="interest-badge">Kepemimpinan</span>
+                <span class="interest-badge">Problem Solving</span>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+  </section>

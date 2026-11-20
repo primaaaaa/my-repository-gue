@@ -1,0 +1,229 @@
+  <!-- ========================================================
+       SECTION 4: PROJEK SAYA (MY FEATURED PROJECTS)
+       - Editorial High-Fashion Style
+       - 3D Rotating Pixelated Token Selector (Cover-flow carousel)
+       - Active Project Detail Hub with 3D WebGL Coin & 3-Tab System:
+         1. Deskripsi (Description & Key Highlights)
+         2. Foto & Galeri (Gallery Preview Mockups)
+         3. Tech Stack & Tim (Hanging Pixel Keychain Charms)
+       ======================================================== -->
+  <section class="projects-section" id="projects" aria-labelledby="projectsTitle">
+    <div class="projects-container">
+
+      <!-- ========================================================
+           VIEW 1: SELECTION VIEW (Only the 3D rotating logos turntable)
+           "sectionnya itu jadi logo aja"
+           ======================================================== -->
+      <div class="proj-view proj-view-selection" id="projSelectionView">
+        <header class="projects-header">
+          <div class="projects-kicker">
+            <span class="projects-kicker-dot"></span>
+            <span>PROJEK SAYA • FEATURED WORKS</span>
+          </div>
+          <h2 class="projects-title" id="projectsTitle">Koleksi Projek</h2>
+          <p class="projects-subtitle">
+            Pilih salah satu projek untuk melihat rincian aplikasi, galeri foto, serta tech stack dan tim pengembang.
+          </p>
+        </header>
+
+        <!-- 3D Turntable Carousel: Only the logos in 3D orbit -->
+        <div class="project-selector-wrapper">
+          <button type="button" class="proj-nav-btn proj-prev-btn" id="projPrevBtn" aria-label="Projek sebelumnya"
+            title="Sebelumnya">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+          </button>
+
+          <div class="project-selector-track" id="projectSelectorTrack" role="tablist" aria-label="Pilih Projek">
+            <!-- Dynamically populated via JS -->
+          </div>
+
+          <button type="button" class="proj-nav-btn proj-next-btn" id="projNextBtn" aria-label="Projek selanjutnya"
+            title="Selanjutnya">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Hint below carousel -->
+        <button type="button" class="proj-selection-hint" id="projSelectionHint" aria-label="Buka projek yang dipilih">
+          <span class="proj-hint-pulse"></span>
+          <span>Klik logo untuk membuka detail projek</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+
+      <!-- ========================================================
+           VIEW 2: DETAIL VIEW (Left 3D Logo | Right Info & 3 Sub-tabs)
+           "pas di klik dia langsung ngerubah sectionnya dengan logo aplikasi dan judul, subjudul, dan deskripsi"
+           ======================================================== -->
+      <div class="proj-view proj-view-detail" id="projDetailView" style="display: none;">
+        <!-- Top Navigation Bar: Back to carousel + Prev/Next switcher -->
+        <div class="proj-detail-topbar">
+          <button type="button" class="proj-back-btn" id="projBackBtn" aria-label="Kembali ke pilihan projek">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+              stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            <span>Kembali ke Pilihan Projek</span>
+          </button>
+
+          <div class="proj-detail-nav">
+            <button type="button" class="proj-subnav-btn" id="projDetailPrevBtn" aria-label="Projek sebelumnya" title="Sebelumnya">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <span class="proj-nav-indicator" id="projNavIndicator">1 / 2</span>
+            <button type="button" class="proj-subnav-btn" id="projDetailNextBtn" aria-label="Projek selanjutnya" title="Selanjutnya">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- 2 Columns: Left 3D Stage | Right Multi-Tab Detail Hub -->
+        <div class="project-showcase" id="projectShowcase">
+          <!-- Column 1 (Left): 3D Rotating Logo Stage -->
+          <div class="proj-col proj-col-stage">
+            <div class="proj-stage-card">
+              <div class="proj-stage-wrapper" id="projStageWrapper">
+                <div class="proj-canvas-wrapper" id="projCanvasWrapper">
+                  <canvas id="projCanvas" class="proj-3d-canvas"></canvas>
+                </div>
+                <div class="proj-podium-shadow"></div>
+                <div class="proj-podium-ring" id="projPodiumRing"></div>
+              </div>
+              <div class="proj-stage-hint">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                  stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                </svg>
+                <span>Drag 360° untuk putar logo</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Column 2 (Right): Project Detail Hub with 3 Tabs -->
+          <div class="proj-col proj-col-detail">
+            <div class="proj-card" id="projDetailCard">
+              <!-- Card Header: Title, Subtitle, Category & 3 Tabs -->
+              <div class="proj-card-header">
+                <div class="proj-header-main">
+                  <div class="proj-title-group">
+                    <div class="proj-meta-badge" id="projCategoryBadge">Fullstack Web App • Resort Booking</div>
+                    <h3 class="proj-title" id="projTitle">Villa Air Luwihaja Hill</h3>
+                    <div class="proj-subtitle" id="projSubtitle">Sistem Reservasi & Informasi Pariwisata Luwihaja Hill</div>
+                  </div>
+                  <div class="proj-year-pill" id="projYearPill">2024</div>
+                </div>
+
+                <!-- 3 Sub-tabs: Deskripsi | Foto & Galeri | Tech Stack & Tim -->
+                <div class="proj-tabs" role="tablist" aria-label="Pilih rincian projek">
+                  <button type="button" class="proj-tab-btn active" id="projTabDesc" role="tab" aria-selected="true"
+                    data-tab="desc">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                      <polyline points="14 2 14 8 20 8"></polyline>
+                      <line x1="16" y1="13" x2="8" y2="13"></line>
+                      <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    <span>Deskripsi</span>
+                  </button>
+
+                  <button type="button" class="proj-tab-btn" id="projTabPhotos" role="tab" aria-selected="false"
+                    data-tab="photos">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <span>Foto & Galeri</span>
+                  </button>
+
+                  <button type="button" class="proj-tab-btn" id="projTabTech" role="tab" aria-selected="false"
+                    data-tab="tech">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                      stroke-linecap="round" stroke-linejoin="round">
+                      <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                      <polyline points="2 17 12 22 22 17"></polyline>
+                      <polyline points="2 12 12 17 22 12"></polyline>
+                    </svg>
+                    <span>Tech Stack & Tim</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Tab Content Body: strictly ONLY 1 tab displayed at a time -->
+              <div class="proj-card-body" id="projCardBody">
+                <!-- Tab Panel 1: Deskripsi -->
+                <div class="proj-tab-panel active" id="projPanelDesc" role="tabpanel" aria-labelledby="projTabDesc">
+                  <p class="proj-desc-text" id="projDescText"></p>
+                  <div class="proj-highlights-box">
+                    <h4 class="proj-highlights-title">Fitur & Sorotan Utama</h4>
+                    <ul class="proj-highlights-list" id="projHighlightsList"></ul>
+                  </div>
+                  <div class="proj-actions">
+                    <a href="#" class="proj-btn proj-btn-primary" id="projLiveBtn" target="_blank" rel="noopener">
+                      <span>Lihat Projek Live</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                      </svg>
+                    </a>
+                    <a href="#" class="proj-btn proj-btn-secondary" id="projRepoBtn" target="_blank" rel="noopener">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                          d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                      </svg>
+                      <span>Source Code</span>
+                    </a>
+                  </div>
+                </div>
+
+                <!-- Tab Panel 2: Foto & Galeri -->
+                <div class="proj-tab-panel" id="projPanelPhotos" role="tabpanel" aria-labelledby="projTabPhotos">
+                  <div class="proj-photos-grid" id="projPhotosGrid"></div>
+                </div>
+
+                <!-- Tab Panel 3: Tech Stack & Tim Pengembang -->
+                <div class="proj-tab-panel" id="projPanelTech" role="tabpanel" aria-labelledby="projTabTech">
+                  <div class="proj-tech-section">
+                    <div class="proj-subheading">
+                      <span class="subheading-dot"></span>
+                      <span>TECH STACK GANTUNGAN KUNCI PIKSEL</span>
+                    </div>
+                    <div class="proj-keychains-rack" id="projKeychainsRack"></div>
+                  </div>
+
+                  <div class="proj-team-section">
+                    <div class="proj-subheading">
+                      <span class="subheading-dot"></span>
+                      <span>TIM PENGEMBANG & PERAN</span>
+                    </div>
+                    <div class="proj-team-list" id="projTeamList"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>

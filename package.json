@@ -1,13 +1,16 @@
 {
-  "name": "minecraft-3d-character",
+  "name": "porto-prima",
   "version": "1.0.0",
-  "description": "3D Minecraft Character Component with Three.js and procedural skin",
+  "description": "Editorial Cream & Crimson Magazine Portfolio with Three.js 3D Interactive Showcase",
   "type": "module",
-  "imports": {
-    "three": "./js/vendor/three.module.js",
-    "three/addons/*": "./js/vendor/*"
-  },
   "scripts": {
-    "start": "python -m http.server 3000"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build:html": "node build-html.js",
+    "start": "vite"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11"
   }
 }

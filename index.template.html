@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Muhammad Prima Yudhistira — Editorial Portfolio</title>
+
+  <!-- Editorial & Display Typography (Cabinet Grotesk / Inter) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700;900&display=swap"
+    rel="stylesheet">
+
+  <!-- Core Editorial Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Three.js Import Map (Local offline-first) -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./js/vendor/three.module.js",
+        "three/addons/controls/OrbitControls.js": "./js/vendor/OrbitControls.js"
+      }
+    }
+  </script>
+</head>
+
+<body id="top">
+
+  <!-- HTML Component Includes -->
+  <include src="components/hero.html" />
+  <include src="components/about.html" />
+  <include src="components/skills.html" />
+  <include src="components/education.html" />
+  <include src="components/projects.html" />
+
+  <!-- Main Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+
+</html>

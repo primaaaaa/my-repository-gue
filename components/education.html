@@ -1,0 +1,179 @@
+  <!-- ========================================================
+       SECTION 4: RIWAYAT PENDIDIKAN (Education Journey)
+       - Solid Crimson Red Background (#d11a2a)
+       - Pure White Typography (#ffffff)
+       - Full-body Interactive 3D Character in Center Stage
+       - Dynamic Outfit & Info Switcher (IPB University <-> SMKN 5 Kota Bekasi)
+       ======================================================== -->
+  <section class="education-section" id="education">
+    <div class="education-container">
+
+      <!-- Header Row: Kicker, Title, Subtitle, and Pill Switcher Tabs -->
+      <header class="education-header">
+        <div class="edu-kicker">
+          <span class="edu-kicker-dot"></span>
+          <span>RIWAYAT PENDIDIKAN • ACADEMIC JOURNEY</span>
+        </div>
+        <h2 class="education-title">Pendidikan</h2>
+        <p class="education-subtitle">
+          Rekam jejak akademis rekayasa perangkat lunak, kepemimpinan organisasi, serta pencapaian kompetisi.
+        </p>
+
+        <!-- Direct Pill Switcher Tabs -->
+        <div class="edu-tabs-wrapper" role="tablist" aria-label="Pilih Institusi Pendidikan">
+          <button type="button" class="edu-tab-btn active" id="eduTabIPB" data-target="ipb" role="tab"
+            aria-selected="true">
+            <span class="tab-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+              </svg>
+            </span>
+            <span class="tab-text-group">
+              <span class="tab-name">IPB University</span>
+              <span class="tab-year">2024 — 2028</span>
+            </span>
+          </button>
+          <button type="button" class="edu-tab-btn" id="eduTabSMK" data-target="smk" role="tab" aria-selected="false">
+            <span class="tab-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="m4 6 8-4 8 4"></path>
+                <path d="m18 10 4 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-8l4-2"></path>
+                <path d="M14 22v-4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v4"></path>
+                <path d="M18 5v17"></path>
+                <path d="M6 5v17"></path>
+                <circle cx="12" cy="9" r="2"></circle>
+              </svg>
+            </span>
+            <span class="tab-text-group">
+              <span class="tab-name">SMKN 5 Kota Bekasi</span>
+              <span class="tab-year">2021 — 2024</span>
+            </span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Interactive 3D Showcase: Left Unified Card (2 Tabs) | Right 3D Stage -->
+      <div class="education-showcase">
+
+        <!-- Column 1 (Left): Unified Information & Experience Card with 2 Tabs -->
+        <div class="edu-col edu-col-card">
+          <div class="edu-card edu-unified-card" id="eduUnifiedCard">
+
+            <!-- Pinned Fixed Header: School, Major, Period & Sub-tab Switcher (Never scrolls!) -->
+            <div class="edu-card-header">
+              <div class="edu-header-main">
+                <div class="edu-title-group">
+                  <h3 class="edu-school-name" id="eduSchoolName">IPB University</h3>
+                  <div class="edu-major-title" id="eduMajorTitle">D4 Teknologi Rekayasa Perangkat Lunak</div>
+                </div>
+                <div class="edu-period-pill" id="eduPeriodPill">
+                  <span class="period-dot"></span>
+                  <span id="eduPeriodText">2024 — 2028 (Aktif)</span>
+                </div>
+              </div>
+
+              <!-- Two Sub-tabs: Rincian vs Pengalaman & Organisasi -->
+              <div class="edu-panel-tabs" role="tablist" aria-label="Pilih panel informasi">
+                <button type="button" class="edu-panel-tab-btn active" id="eduTabRincian" role="tab"
+                  aria-selected="true" aria-controls="eduPanelInfo">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                  <span>Rincian</span>
+                </button>
+                <button type="button" class="edu-panel-tab-btn" id="eduTabPengalaman" role="tab"
+                  aria-selected="false" aria-controls="eduPanelAchieve">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                    <path d="M4 22h16"></path>
+                    <path d="M10 14.66V17c0 .55-.45 1-1 1H7v4h10v-4h-2c-.55 0-1-.45-1-1v-2.34"></path>
+                    <path d="M18 4H6v7a6 6 0 0 0 12 0V4z"></path>
+                  </svg>
+                  <span id="eduTabPengalamanText">Pengalaman & Organisasi</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Card Content Area: ONLY the active tab's content is displayed! -->
+            <div class="edu-card-body" id="eduCardBody">
+
+              <!-- Tab Panel 1: Rincian (Active by default, occupies 100% full width) -->
+              <div class="edu-tab-panel edu-panel-info active" id="eduPanelInfo" role="tabpanel" aria-labelledby="eduTabRincian">
+                <p class="edu-summary-desc" id="eduSummaryDesc">
+                  Fokus mendalam pada rekayasa perangkat lunak modern, arsitektur aplikasi web terdistribusi, visual 3D
+                  interaktif, dan kepemimpinan kreatif.
+                </p>
+                <div class="edu-location-meta">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                    <circle cx="12" cy="10" r="3"></circle>
+                  </svg>
+                  <span id="eduLocationText">Bogor, Jawa Barat</span>
+                </div>
+              </div>
+
+              <!-- Tab Panel 2: Pengalaman & Organisasi (Occupies 100% full width when active) -->
+              <div class="edu-tab-panel edu-panel-achieve" id="eduPanelAchieve" role="tabpanel" aria-labelledby="eduTabPengalaman">
+                <div class="edu-achieve-scroll" id="eduAchieveScroll">
+                  <ul class="achieve-list" id="eduAchieveList">
+                    <!-- Dynamically populated via JS -->
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Column 2 (Right): 3D Character Stage (Full-body Minecraft Character with Costume Switch) -->
+        <div class="edu-col edu-col-stage">
+          <div class="edu-stage-wrapper" id="eduStageWrapper">
+            <!-- 3D Canvas Box -->
+            <div class="edu-canvas-wrapper" id="eduCanvasWrapper">
+              <canvas id="eduCanvas" class="edu-3d-canvas"></canvas>
+            </div>
+
+            <!-- Elevated Circular Stage Pedestal / Floor Ring -->
+            <div class="edu-podium-shadow"></div>
+            <div class="edu-podium-ring"></div>
+
+            <!-- Left & Right Arrow Navigation Controls -->
+            <button type="button" class="edu-nav-btn edu-prev-btn" id="eduPrevBtn" aria-label="Pendidikan sebelumnya"
+              title="Ganti ke sebelumnya">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </button>
+            <button type="button" class="edu-nav-btn edu-next-btn" id="eduNextBtn" aria-label="Pendidikan selanjutnya"
+              title="Ganti ke selanjutnya">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Drag Hint Text -->
+          <div class="edu-stage-hint">
+            <svg class="hint-svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+            <span>Drag 360° untuk putar karakter</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
