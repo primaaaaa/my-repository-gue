@@ -55,7 +55,9 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -166,8 +168,8 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   z-index: 5;
   display: block;
   pointer-events: none;
@@ -253,7 +255,7 @@ body {
   /* Pure WHITE */
   padding: clamp(60px, 8vh, 100px) clamp(24px, 6vw, 70px);
   overflow: hidden;
-  box-shadow: 0 -25px 60px rgba(0, 0, 0, 0.18);
+  box-shadow: none;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -4210,14 +4212,20 @@ body {
   position: absolute;
   top: 28px;
   left: 0;
+  right: calc(50% + 48px);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
   gap: 6px;
   z-index: 4;
-  max-width: clamp(230px, 30vw, 290px);
+  max-width: 260px;
+  box-sizing: border-box;
   transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.title-break-sm {
+  display: none;
 }
 
 .contact-section.is-printer-active {
@@ -4271,7 +4279,10 @@ body {
   margin: 0;
   text-align: left;
   white-space: normal;
-  max-width: 250px;
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 /* 3D Showcase Stage */
@@ -5142,8 +5153,10 @@ body {
 
   .contact-compact-header {
     top: 26px;
-    left: 10px;
-    max-width: calc(50% - 34px);
+    left: 12px;
+    right: calc(50% + 42px);
+    max-width: 240px;
+    gap: 5px;
   }
 
   .lanyard-rig {
@@ -5225,6 +5238,36 @@ body {
     font-size: 11px;
     gap: 8px;
   }
+
+  .contact-compact-header {
+    top: 24px;
+    left: 10px;
+    right: calc(50% + 40px);
+    max-width: 220px;
+    gap: 4px;
+  }
+
+  .title-break-sm {
+    display: inline;
+  }
+
+  .contact-compact-header .contact-title {
+    font-size: clamp(1.15rem, 4vw, 1.35rem);
+    line-height: 1.15;
+    overflow-wrap: break-word;
+    word-break: normal;
+  }
+
+  .contact-subtitle {
+    font-size: 0.76rem;
+    line-height: 1.38;
+    white-space: normal;
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
+    padding: 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -5245,8 +5288,13 @@ body {
   .contact-compact-header {
     top: 24px;
     left: 8px;
+    right: calc(50% + 38px);
     gap: 4px;
-    max-width: calc(50% - 28px);
+    max-width: 200px;
+  }
+
+  .title-break-sm {
+    display: inline;
   }
 
   .lanyard-strap {
@@ -5255,14 +5303,20 @@ body {
   }
 
   .contact-compact-header .contact-title {
-    font-size: 1.25rem;
+    font-size: clamp(1.1rem, 4.4vw, 1.28rem);
+    line-height: 1.12;
+    overflow-wrap: break-word;
+    word-break: normal;
   }
 
   .contact-subtitle {
     font-size: 0.74rem;
     line-height: 1.35;
     white-space: normal;
-    max-width: 155px;
+    width: 100%;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: normal;
     padding: 0;
   }
 
@@ -5342,6 +5396,25 @@ body {
 
   .contact-pill .pill-action {
     font-size: 9.5px;
+  }
+}
+
+@media (max-width: 380px) {
+  .contact-compact-header {
+    top: 20px;
+    left: 6px;
+    right: calc(50% + 32px);
+    max-width: 170px;
+  }
+
+  .contact-compact-header .contact-title {
+    font-size: 1.04rem;
+    line-height: 1.1;
+  }
+
+  .contact-subtitle {
+    font-size: 0.68rem;
+    line-height: 1.3;
   }
 }
 

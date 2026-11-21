@@ -25,11 +25,13 @@ export class HeroComponent {
     if (initialScrollY > heroH * 0.2) {
       this.introProgress = 1;
       this.isIntroPlaying = false;
+      this.hasEntered = true;
     } else {
       this.introProgress = 0;
-      this.isIntroPlaying = true;
+      this.isIntroPlaying = false; // Hold until preloader finishes
+      this.hasEntered = false;
       this.introDuration = 1.25;
-      this.introTimer = -0.15; // 150ms delay before popping up
+      this.introTimer = -0.12; // 120ms gentle delay after preloader fades
     }
 
     this.initScene();
@@ -40,10 +42,13 @@ export class HeroComponent {
     const container = document.getElementById('heroCanvasContainer');
     if (!container) return;
 
+    const w = container.clientWidth || window.innerWidth;
+    const h = container.clientHeight || window.innerHeight;
+
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(
       36,
-      window.innerWidth / window.innerHeight,
+      w / h,
       0.1,
       1000
     );
@@ -58,7 +63,7 @@ export class HeroComponent {
       alpha: true,
       powerPreference: 'high-performance'
     });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(w, h);
     this.renderer.setPixelRatio(dpr);
     this.renderer.setClearColor(0x000000, 0);
     this.renderer.shadowMap.enabled = true;
@@ -94,6 +99,24 @@ export class HeroComponent {
       scale: 0.11
     });
     this.scene.add(this.character.group);
+    if (!this.hasEntered) {
+      this.character.group.visible = false; // Completely invisible during loading
+    }
+    this.updateTransform();
+  }
+
+  startEntrance() {
+    if (this.hasEntered) {
+      if (this.character) this.character.group.visible = true;
+      return;
+    }
+    this.hasEntered = true;
+    if (this.character) {
+      this.character.group.visible = true;
+    }
+    this.introProgress = 0;
+    this.isIntroPlaying = true;
+    this.introTimer = -0.12; // Slight pause as preloader dissolves
     this.updateTransform();
   }
 
@@ -128,9 +151,13 @@ export class HeroComponent {
 
   resize(newW, newH) {
     if (!this.renderer || !this.camera) return;
-    this.camera.aspect = newW / newH;
+    const container = document.getElementById('heroCanvasContainer');
+    const w = container?.clientWidth || newW || window.innerWidth;
+    const h = container?.clientHeight || newH || window.innerHeight;
+
+    this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
-    this.renderer.setSize(newW, newH);
+    this.renderer.setSize(w, h);
     this.updateTransform();
   }
 

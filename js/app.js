@@ -67,7 +67,12 @@ class App {
   // ========================================================
   async initPreloader() {
     const preloader = document.getElementById('appPreloader');
-    if (!preloader) return;
+    if (!preloader) {
+      if (this.heroComponent?.startEntrance) {
+        this.heroComponent.startEntrance();
+      }
+      return;
+    }
 
     // Safety fallback: guaranteed dismissal after 2.5s
     const safetyTimeout = setTimeout(() => {
@@ -111,8 +116,11 @@ class App {
     requestAnimationFrame(() => {
       try {
         if (this.heroComponent?.renderer && this.heroComponent?.scene && this.heroComponent?.camera) {
+          if (this.heroComponent.character) this.heroComponent.character.group.visible = true;
           this.heroComponent.renderer.compile(this.heroComponent.scene, this.heroComponent.camera);
-          this.heroComponent.render(0.016, 0.1, this.mouseNDC, this.raycaster, true);
+          if (this.heroComponent.character && !this.heroComponent.hasEntered) {
+            this.heroComponent.character.group.visible = false;
+          }
         }
         if (this.aboutComponent?.renderer && this.aboutComponent?.scene && this.aboutComponent?.camera) {
           this.aboutComponent.renderer.compile(this.aboutComponent.scene, this.aboutComponent.camera);
@@ -143,6 +151,11 @@ class App {
       setTimeout(() => {
         preloader.style.display = 'none';
       }, 500);
+
+      // Trigger hero character pop-up only AFTER loading screen is dismissed
+      if (this.heroComponent && typeof this.heroComponent.startEntrance === 'function') {
+        this.heroComponent.startEntrance();
+      }
     }
   }
 
