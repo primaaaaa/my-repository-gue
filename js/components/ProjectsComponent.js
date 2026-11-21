@@ -1,14 +1,16 @@
 /**
  * ProjectsComponent.js
  * Encapsulates the Featured Projects section:
- * - 3D Pixelated Rotating Coin Showcase (Three.js WebGL with NearestFilter)
- * - 3D Turntable Carousel Coverflow Selector (Only logos in 3D orbit)
+ * - 3D Pixelated Rotating Coin Showcase (Three.js WebGL with NearestFilter & MeshBasicMaterial for pure colors)
+ * - 3D Turntable Carousel Coverflow Selector (Orbital coverflow with 4 projects)
  * - 2-Mode View System: Selection Mode -> Detail Hub Mode
  * - 3 Sub-tabs: Deskripsi (scrollable), Foto & Galeri (scrollable), Tech Stack & Tim (scrollable)
+ * - Keychains for primary stack + Badges for secondary technologies
  * - Touch swipe guard for keychain rack and full keyboard accessibility.
  */
 
 import * as THREE from 'three';
+import { createExtrudedLogoGeometry } from '../utils/logoData.js';
 
 export class ProjectsComponent {
   constructor(isMobileDevice = false) {
@@ -25,74 +27,215 @@ export class ProjectsComponent {
     this.currentProjIndex = 0;
     this.isDragging = false;
     this.spinVelocity = 0;
+    this.isDetailOpen = false;
 
     this.projectsData = [
       {
-        id: 'villa-air',
-        title: 'Villa Air Luwihaja Hill',
+        id: 'darkim',
+        title: 'DARKIM',
+        shape: 'rect',
+        subtitle: 'Deteksi Barcode Pada Makanan Minuman Kemasan untuk Analisis Resiko Kandungan pada Penderita Hipertensi dan Diabetes',
+        logoTexture: 'assets/projects/darkim_pixel.png',
+        logoRaw: 'assets/projects/darkim_raw.png',
+        themeColor: '#00d084',
+        accentColor: '#00d084',
+        rimColor: 0x18181b,
+        description: 'Aplikasi inovatif pemindai barcode produk makanan dan minuman kemasan untuk menganalisis risiko kandungan gizi (gula, garam, lemak/natrium) bagi penderita hipertensi dan diabetes secara instan, akurat, dan mudah dipahami.',
+        highlights: [
+          'Deteksi instan barcode kemasan via kamera dengan ekstraksi data nutrisi presisi',
+          'Penilaian risiko kesehatan otomatis yang disesuaikan untuk penderita hipertensi & diabetes',
+          'Rekomendasi alternatif konsumsi yang lebih sehat berdasarkan profil nutrisi produk'
+        ],
+        liveUrl: null,
+        repoUrl: '#',
+        photos: [
+          { title: 'Pemindai Barcode Kemasan', tag: 'Barcode Scanner', color: '#005f3b' },
+          { title: 'Laporan Analisis Risiko Nutrisi', tag: 'Risk Assessment', color: '#00874e' },
+          { title: 'Rekomendasi Makanan Sehat', tag: 'Healthy Alternative', color: '#00aa64' }
+        ],
+        techStack: ['nextjs', 'tailwind', 'sql', 'python'],
+        otherTech: ['FastAPI', 'OpenFoodFacts API'],
+        team: [
+          { name: 'Muhammad Prima Yudhistira', role: 'Project Manager & Frontend Developer' },
+          { name: 'Naufal Fakhrie', role: 'Frontend Developer' },
+          { name: 'Arya Prasetya Putra Albani', role: 'ML Engineer' }
+        ]
+      },
+      {
+        id: 'medigo',
+        title: 'MediGo',
+        shape: 'circle',
+        subtitle: 'Portal Informasi Fasilitas Kesehatan dan Forum Diskusi Publik untuk sekitar Jabodetabek',
+        logoTexture: 'assets/projects/medigo_pixel.png',
+        logoRaw: 'assets/projects/medigo_raw.png',
+        themeColor: '#0c5c84',
+        accentColor: '#179bb8',
+        rimColor: 0x179bb8,
+        description: 'Portal informasi digital dan forum interaktif publik yang menghadirkan direktori fasilitas kesehatan (faskes) terpadu di wilayah Jabodetabek, rute navigasi cepat menuju faskes terdekat, serta ruang diskusi terbuka bagi masyarakat.',
+        highlights: [
+          'Direktori faskes se-Jabodetabek dengan pemetaan interaktif Leaflet JS & navigasi rute',
+          'Forum diskusi publik interaktif untuk bertukar pengalaman dan informasi layanan medis',
+          'Integrasi asisten cerdas Gemini API untuk konsultasi dan pencarian rujukan cepat'
+        ],
+        liveUrl: 'https://medigo.free.nf',
+        repoUrl: '#',
+        photos: [
+          { title: 'Landing Page MediGo', image: 'assets/project-ui/medigo/landing-page.png', color: '#0c5c84' },
+          { title: 'Beranda Utama & Dashboard', image: 'assets/project-ui/medigo/beranda.png', color: '#0c4a6e' },
+          { title: 'Peta Interaktif Sebaran Faskes', image: 'assets/project-ui/medigo/peta-faskes.png', color: '#0284c7' },
+          { title: 'Pencarian & Filter Faskes Terdekat', image: 'assets/project-ui/medigo/pencarian.png', color: '#0369a1' },
+          { title: 'Detail Fasilitas Kesehatan & Layanan', image: 'assets/project-ui/medigo/detail-faskes.png', color: '#075985' },
+          { title: 'Forum Komunitas Publik', image: 'assets/project-ui/medigo/forum.png', color: '#0369a1' },
+          { title: 'Detail Percakapan Utas Forum', image: 'assets/project-ui/medigo/detail-forum.png', color: '#0284c7' },
+          { title: 'Asisten Virtual AI MediBot', image: 'assets/project-ui/medigo/medibot-ai-chatbot.png', color: '#0ea5e9' }
+        ],
+        techStack: ['laravel', 'bootstrap', 'sql'],
+        otherTech: ['Gemini API', 'Leaflet js'],
+        team: [
+          { name: 'Muhammad Prima Yudhistira', role: 'Project Manager & Frontend Developer' },
+          { name: 'Raden Mas Galih Pradityo', role: 'Backend Developer' },
+          { name: 'Misael Feodora Pranata Dauhan', role: 'UI/UX Designer' },
+          { name: 'Osanna Patricia Limbong', role: 'Data Engineer & Quality Assurance' }
+        ]
+      },
+      {
+        id: 'beabot',
+        title: 'Beabot',
+        shape: 'circle',
+        subtitle: 'Asisten Suara AI Cerdas & Platform Komunikasi Terpadu',
+        logoTexture: 'assets/projects/purple_app_pixel.png',
+        logoRaw: 'assets/projects/purple_app_raw.png',
+        themeColor: '#6b21a8',
+        accentColor: '#9333ea',
+        rimColor: 0x9333ea,
+        description: 'Platform asisten suara berbasis kecerdasan buatan (Voice AI Agent) yang dirancang untuk melakukan interaksi percakapan natural secara real-time, mengotomasi alur komunikasi, dan merespons kebutuhan pengguna dengan latensi rendah.',
+        highlights: [
+          'Interaksi percakapan suara natural berlatensi rendah ditenagai VAPI AI Voice Agent',
+          'Pemahaman konteks mendalam bertenaga model kecerdasan buatan Gemini API',
+          'Arsitektur backend tangguh berbasis Express JS dan manajemen database SQL terstruktur'
+        ],
+        liveUrl: null,
+        repoUrl: '#',
+        photos: [
+          { title: 'Antarmuka Percakapan Voice AI', tag: 'Voice Console', color: '#581c87' },
+          { title: 'Transkripsi Percakapan Real-Time', tag: 'Live Transcript', color: '#6b21a8' },
+          { title: 'Panel Konfigurasi Agen AI', tag: 'Agent Setup', color: '#7e22ce' }
+        ],
+        techStack: ['nextjs', 'bootstrap', 'sql'],
+        otherTech: ['Express JS', 'Gemini API key', 'VAPI AI Voice Agent'],
+        team: [
+          { name: 'Muhammad Prima Yudhistira', role: 'Project Manager & Frontend Developer' },
+          { name: 'Rafid Wahyu Aditya', role: 'Backend Developer' },
+          { name: 'Rifaldi', role: 'UI/UX Designer' }
+        ]
+      },
+      {
+        id: 'luwihaja-hill',
+        title: 'Website Reservasi Luwihaja Hill',
+        shape: 'circle',
         subtitle: 'Sistem Reservasi & Informasi Pariwisata Luwihaja Hill',
-        category: 'Fullstack Web App • Resort Booking',
-        year: '2024',
         logoTexture: 'assets/projects/villa_air_pixel.png',
         logoRaw: 'assets/projects/villa_air_raw.png',
         themeColor: '#2b5834',
         accentColor: '#38a169',
-        rimColor: 0xe2a03f, // Warm Gold
-        description: 'Platform web komprehensif yang dirancang untuk mempermudah calon wisatawan menjelajahi keindahan Luwihaja Hill serta melakukan reservasi akomodasi Villa Air secara instan. Dilengkapi dengan kalender ketersediaan interaktif, katalog tipe villa dengan visualisasi detail, dan sistem konfirmasi pemesanan otomatis.',
+        rimColor: 0xe2a03f,
+        description: 'Platform web komprehensif yang dirancang untuk mempermudah calon wisatawan menjelajahi keindahan Luwihaja Hill serta melakukan reservasi akomodasi Villa Air secara instan dengan kalender ketersediaan interaktif dan konfirmasi otomatis.',
         highlights: [
-          'Sistem booking & kalkulasi tarif real-time berbasis tanggal menginap',
-          'Antarmuka responsif ramah mobile dengan performa loading cepat & ringan',
-          'Integrasi galeri fasilitas panorama alam dan rute panduan interaktif'
+          'Sistem reservasi kamar & kalkulasi tarif real-time berbasis tanggal menginap',
+          'Antarmuka ramah mobile dengan visualisasi katalog tipe villa dan fasilitas lengkap',
+          'Integrasi rute lokasi dan panduan wisata terintegrasi di kawasan Luwihaja Hill'
         ],
-        liveUrl: '#',
+        liveUrl: null,
         repoUrl: '#',
         photos: [
           { title: 'Beranda Luwihaja Hill', tag: 'Landing Page', color: '#1f4325' },
           { title: 'Katalog Tipe Villa', tag: 'Accommodations', color: '#275830' },
           { title: 'Alur Reservasi Cepat', tag: 'Booking Engine', color: '#31693a' }
         ],
-        techStack: ['html', 'css', 'javascript', 'tailwind', 'git'],
+        techStack: ['laravel', 'bootstrap', 'sql'],
+        otherTech: [],
         team: [
-          { name: 'Muhammad Prima Yudhistira', role: 'Project Manager & Frontend Developer' },
-          { name: 'Tim Luwihaja Hill', role: 'Business Owner & Content Integration' }
+          { name: 'Rafi Fakhrie Alaudin', role: 'Project Manager' },
+          { name: 'Muhammad Prima Yudhistira', role: 'Frontend Developer' },
+          { name: 'Aretta Dwi Hapsari', role: 'Frontend Developer' },
+          { name: 'Alhamid Adriansyah', role: 'Backend Developer' }
         ]
       },
       {
-        id: 'beo-creative',
-        title: 'Beo Creative Hub',
-        subtitle: 'Platform Komunitas & Portofolio Kolaboratif Kreatif',
-        category: 'Interactive Web Platform • Creative Community',
-        year: '2025',
-        logoTexture: 'assets/projects/purple_app_pixel.png',
-        logoRaw: 'assets/projects/purple_app_raw.png',
-        themeColor: '#6b21a8',
-        accentColor: '#9333ea',
-        rimColor: 0xc084fc, // Violet Glow
-        description: 'Aplikasi kolaborasi karya digital yang dirancang untuk mempertemukan para kreator, desainer grafis, dan programmer dalam satu ekosistem terpadu. Memungkinkan kurasi portofolio interaktif, apresiasi karya visual, dan manajemen proyek kreatif secara terstruktur.',
+        id: 'wertugo',
+        title: 'Wertugo',
+        shape: 'contour',
+        subtitle: 'Aplikasi Rekomendasi Spot Wisata di Sekitar Anda',
+        logoTexture: 'assets/projects/wertugo_pixel.png',
+        logoRaw: 'assets/projects/wertugo_raw.png',
+        themeColor: '#16a34a',
+        accentColor: '#f97316',
+        rimColor: 0xf97316,
+        description: 'Aplikasi cerdas rekomendasi dan pemandu spot wisata sekitar yang membantu pelancong menemukan destinasi rekreasi menarik, fasilitas lengkap, dan rute perjalanan terbaik dengan navigasi peta interaktif.',
         highlights: [
-          'Showcase karya portofolio interaktif dengan interaksi mikro responsif',
-          'Sistem feedback dan kolaborasi antar anggota tim secara real-time',
-          'Arsitektur modular dengan komponen UI kustom yang fleksibel'
+          'Rekomendasi spot wisata berbasis lokasi geografis pengguna (geolocation)',
+          'Katalog objek wisata terpadu dengan ulasan, fasilitas, dan panduan rute',
+          'Sinkronisasi data real-time berbasis NoSQL MongoDB dengan backend responsif'
         ],
-        liveUrl: '#',
+        liveUrl: null,
         repoUrl: '#',
         photos: [
-          { title: 'Dashboard Komunitas Kreatif', tag: 'Overview UI', color: '#581c87' },
-          { title: 'Katalog Proyek & Kolaborasi', tag: 'Project Feed', color: '#6b21a8' },
-          { title: 'Detail Portofolio Kreator', tag: 'Work Detail', color: '#7e22ce' }
+          { title: 'Eksplorasi Spot Wisata', tag: 'Discovery UI', color: '#14532d' },
+          { title: 'Peta & Rute Interaktif', tag: 'Map Route', color: '#c2410c' },
+          { title: 'Detail Tempat & Fasilitas', tag: 'Spot Detail', color: '#15803d' }
         ],
-        techStack: ['next', 'bootstrap', 'react',],
+        techStack: ['laravel', 'mongodb', 'bootstrap'],
+        otherTech: ['Java'],
         team: [
-          { name: 'Muhammad Prima Yudhistira', role: 'Lead Frontend Developer' },
-          { name: 'Tim Desain', role: 'UI/UX & Visual Asset Designer' }
+          { name: 'Muhammad Prima Yudhistira', role: 'Web Developer & Backend Developer' },
+          { name: 'Arya Prasetya Putra Albani', role: 'Web Developer & UI/UX' },
+          { name: 'Ben Azaria', role: 'Mobile Developer' }
+        ]
+      },
+      {
+        id: 'bogorsehat',
+        title: 'BogorSehat',
+        shape: 'contour',
+        subtitle: 'Portal Informasi Fasilitas Kesehatan di Kota dan Kabupaten Bogor',
+        logoTexture: 'assets/projects/bogorsehat_pixel.png',
+        logoRaw: 'assets/projects/bogorsehat_raw.png',
+        themeColor: '#0d9488',
+        accentColor: '#0284c7',
+        rimColor: 0x0284c7,
+        description: 'Portal informasi terpadu dan direktori fasilitas kesehatan (rumah sakit, puskesmas, klinik) di wilayah Kota dan Kabupaten Bogor untuk mempermudah masyarakat mengakses layanan medis terdekat secara cepat, akurat, dan terpercaya.',
+        highlights: [
+          'Direktori komprehensif faskes se-Kota & Kabupaten Bogor dengan pemetaan lokasi dan klasifikasi layanan',
+          'Sistem pencarian dan filter cepat faskes terdekat berbasis lokasi pengguna (geolocation)',
+          'Arsitektur web modern performa tinggi dengan Next.js & Tailwind CSS, ditenagai backend Python dan database SQL terstruktur'
+        ],
+        liveUrl: null,
+        repoUrl: '#',
+        photos: [
+          { title: 'Beranda Utama BogorSehat', image: 'assets/project-ui/bogor-sehat/Beranda (1).png', color: '#0d9488' },
+          { title: 'Peta Interaktif Faskes', image: 'assets/project-ui/bogor-sehat/Peta Interaktif.png', color: '#0284c7' },
+          { title: 'Pencarian & Filter Faskes', image: 'assets/project-ui/bogor-sehat/Cari Faskes.png', color: '#0f766e' },
+          { title: 'Detail Fasilitas Kesehatan', image: 'assets/project-ui/bogor-sehat/Detail Faskes.png', color: '#0369a1' },
+          { title: 'Forum Diskusi Komunitas', image: 'assets/project-ui/bogor-sehat/Forum Diskusi.png', color: '#0284c7' }
+        ],
+        techStack: ['nextjs', 'tailwind', 'python', 'sql'],
+        otherTech: [],
+        team: [
+          { name: 'Muhammad Prima Yudhistira', role: 'Project Manager' },
+          { name: 'Haitsam Izzaturahman', role: 'Frontend Developer' },
+          { name: 'Rafid Wahyu Aditya', role: 'Backend Developer dan Data Engineer' },
+          { name: 'Cahyaning Sessa Lestari', role: 'UI/UX dan Quality Assurance' }
         ]
       }
     ];
+
+    this.currentPhotoIndex = 0;
+    this.isPhotoModalOpen = false;
 
     this.initScene();
     this.initEventListeners();
     this.renderProjectSelector();
     this.switchProject(0, false);
+    this.updateMobileLayout();
   }
 
   initScene() {
@@ -106,7 +249,7 @@ export class ProjectsComponent {
     const h = wrapper.clientHeight || 340;
 
     this.camera = new THREE.PerspectiveCamera(36, w / h, 0.1, 100);
-    this.camera.position.set(0, 0, 4.4);
+    this.camera.position.set(0, 0, 3.8);
 
     const dpr = this.isMobileDevice
       ? Math.min(window.devicePixelRatio, 1.25)
@@ -121,22 +264,20 @@ export class ProjectsComponent {
     this.renderer.setSize(w, h);
     this.renderer.setPixelRatio(dpr);
     this.renderer.setClearColor(0x000000, 0);
-    this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    this.renderer.toneMappingExposure = 1.15;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.8);
+    // Lighting for metallic rim
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.6);
     this.scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xffffff, 2.4);
+    const keyLight = new THREE.DirectionalLight(0xffffff, 2.2);
     keyLight.position.set(2.5, 3.5, 3.5);
     this.scene.add(keyLight);
 
-    const rimLight = new THREE.DirectionalLight(0xffffff, 1.6);
+    const rimLight = new THREE.DirectionalLight(0xffffff, 1.5);
     rimLight.position.set(-2.5, 2.5, -2.5);
     this.scene.add(rimLight);
 
-    const fillLight = new THREE.DirectionalLight(0xfef3c7, 1.1);
+    const fillLight = new THREE.DirectionalLight(0xfef3c7, 1.0);
     fillLight.position.set(0, -2.5, 2.5);
     this.scene.add(fillLight);
 
@@ -160,10 +301,11 @@ export class ProjectsComponent {
       return tex;
     });
 
-    // 3D Coin Cylinder Geometry (thickness 0.20, radius 1.15 - sized comfortably)
-    const coinGeo = new THREE.CylinderGeometry(1.15, 1.15, 0.20, 64);
-    coinGeo.rotateX(Math.PI / 2); // Orient front face towards +Z
-    coinGeo.rotateZ(Math.PI / 2); // Rotate 90 deg counter-clockwise so logo is upright!
+    // Build exact extruded contour 3D geometries for each logo (thickness follows logo silhouette!)
+    this.logoGeometries = {};
+    this.projectsData.forEach(p => {
+      this.logoGeometries[p.id] = createExtrudedLogoGeometry(p.id);
+    });
 
     const initialProj = this.projectsData[0];
     this.rimMat = new THREE.MeshStandardMaterial({
@@ -171,23 +313,22 @@ export class ProjectsComponent {
       metalness: 0.85,
       roughness: 0.22
     });
-    this.frontMat = new THREE.MeshStandardMaterial({
+
+    // Pure unbleached colors with MeshBasicMaterial (eliminates white specular glare/veil!)
+    this.frontMat = new THREE.MeshBasicMaterial({
       map: this.projTextures[0],
-      roughness: 0.38,
-      metalness: 0.1,
       transparent: true,
       alphaTest: 0.05
     });
-    this.backMat = new THREE.MeshStandardMaterial({
-      map: this.projBackTextures[0],
-      roughness: 0.38,
-      metalness: 0.1,
+    this.backMat = new THREE.MeshBasicMaterial({
+      map: this.projTextures[0],
       transparent: true,
       alphaTest: 0.05
     });
 
-    // Materials order: [0: rim, 1: front face, 2: back face]
-    this.coin = new THREE.Mesh(coinGeo, [this.rimMat, this.frontMat, this.backMat]);
+    // Mesh setup: [0: rim/edge thickness, 1: front face, 2: back face]
+    const initialGeo = this.logoGeometries[initialProj.id];
+    this.coin = new THREE.Mesh(initialGeo, [this.rimMat, this.frontMat, this.backMat]);
     this.scene.add(this.coin);
 
     this.updateTransform();
@@ -247,13 +388,30 @@ export class ProjectsComponent {
     window.addEventListener('touchend', onPointerUp);
   }
 
+  updateMobileLayout() {
+    const isMobile = window.innerWidth <= 900;
+    const stageCard = document.querySelector('.proj-stage-card');
+    const stageCol = document.querySelector('.proj-col-stage');
+    const headerMain = document.querySelector('.proj-header-main');
+
+    if (isMobile && stageCard && headerMain && stageCard.parentElement !== headerMain) {
+      headerMain.prepend(stageCard);
+      this.updateTransform();
+    } else if (!isMobile && stageCard && stageCol && stageCard.parentElement !== stageCol) {
+      stageCol.appendChild(stageCard);
+      this.updateTransform();
+    }
+  }
+
   updateTransform() {
     const wrapper = document.getElementById('projCanvasWrapper');
     if (!wrapper || !this.renderer || !this.camera) return;
 
-    const w = wrapper.clientWidth || 320;
-    const h = wrapper.clientHeight || 340;
+    const isMobile = window.innerWidth <= 900;
+    const w = wrapper.clientWidth || (isMobile ? 82 : 320);
+    const h = wrapper.clientHeight || (isMobile ? 72 : 340);
 
+    this.camera.position.z = isMobile ? 4.8 : 4.4;
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h);
@@ -265,23 +423,31 @@ export class ProjectsComponent {
 
     track.innerHTML = this.projectsData.map((p, idx) => `
       <button type="button" class="proj-selector-item" data-index="${idx}" aria-label="Lihat projek ${p.title}">
-        <div class="proj-coin-3d">
+        <div class="proj-coin-3d ${p.shape === 'rect' ? 'is-rect' : ''}">
           <div class="proj-coin-spin">
-            <div class="proj-coin-face proj-coin-front" style="background-image: url('${p.logoTexture}')"></div>
-            <div class="proj-coin-face proj-coin-back" style="background-image: url('${p.logoTexture}')"></div>
+            <div class="proj-coin-face" style="background-image: url('${p.logoTexture}')"></div>
           </div>
+          <div class="proj-coin-shadow"></div>
         </div>
         <div class="proj-selector-info">
           <span class="proj-selector-title">${p.title}</span>
-          <span class="proj-selector-tag">${p.year} • ${p.category.split('•')[0].trim()}</span>
         </div>
       </button>
     `).join('');
 
     track.querySelectorAll('.proj-selector-item').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', (e) => {
+        if (this.suppressSelectorClick) {
+          e.preventDefault();
+          e.stopPropagation();
+          return;
+        }
         const idx = parseInt(btn.getAttribute('data-index'), 10);
-        if (!isNaN(idx)) {
+        if (isNaN(idx)) return;
+
+        if (idx !== this.currentProjIndex) {
+          this.switchProject(idx, true);
+        } else {
           this.openProjectDetail(idx);
         }
       });
@@ -295,23 +461,28 @@ export class ProjectsComponent {
     if (!track) return;
 
     const items = track.querySelectorAll('.proj-selector-item');
+    const total = this.projectsData.length;
     items.forEach((item, idx) => {
-      item.classList.remove('pos-center', 'pos-right-behind', 'pos-left-behind', 'active');
-      if (idx === this.currentProjIndex) {
+      item.classList.remove('pos-center', 'pos-right-behind', 'pos-left-behind', 'pos-far-behind', 'active');
+      const diff = (idx - this.currentProjIndex + total) % total;
+      if (diff === 0) {
         item.classList.add('pos-center', 'active');
         item.setAttribute('aria-selected', 'true');
-      } else {
+      } else if (diff === 1) {
+        item.classList.add('pos-right-behind');
         item.setAttribute('aria-selected', 'false');
-        if (this.currentProjIndex === 0) {
-          item.classList.add('pos-right-behind');
-        } else {
-          item.classList.add('pos-left-behind');
-        }
+      } else if (diff === total - 1) {
+        item.classList.add('pos-left-behind');
+        item.setAttribute('aria-selected', 'false');
+      } else {
+        item.classList.add('pos-far-behind');
+        item.setAttribute('aria-selected', 'false');
       }
     });
   }
 
   openProjectDetail(index = this.currentProjIndex) {
+    this.isDetailOpen = true;
     this.switchProject(index, true);
 
     const selView = document.getElementById('projSelectionView');
@@ -330,6 +501,8 @@ export class ProjectsComponent {
       detView.style.transform = 'translateY(16px)';
       detView.style.transition = 'opacity 0.32s ease, transform 0.32s ease';
 
+      this.updateMobileLayout();
+
       void detView.offsetWidth;
 
       detView.style.opacity = '1';
@@ -341,6 +514,8 @@ export class ProjectsComponent {
   }
 
   closeProjectDetail() {
+    this.isDetailOpen = false;
+    this.closePhotoModal();
     const selView = document.getElementById('projSelectionView');
     const detView = document.getElementById('projDetailView');
     if (!selView || !detView) return;
@@ -366,41 +541,131 @@ export class ProjectsComponent {
     }, 220);
   }
 
+  openPhotoModal(photoIdx) {
+    const project = this.projectsData[this.currentProjIndex];
+    if (!project || !project.photos || project.photos.length === 0) return;
+
+    this.currentPhotoIndex = Math.max(0, Math.min(photoIdx, project.photos.length - 1));
+    this.isPhotoModalOpen = true;
+
+    const modal = document.getElementById('projPhotoModal');
+    if (modal) {
+      modal.style.display = 'flex';
+      modal.setAttribute('aria-hidden', 'false');
+    }
+    document.body.style.overflow = 'hidden';
+
+    this.renderModalPhoto();
+  }
+
+  closePhotoModal() {
+    this.isPhotoModalOpen = false;
+    const modal = document.getElementById('projPhotoModal');
+    if (modal) {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    }
+    const slide = document.getElementById('projModalSlide');
+    if (slide) {
+      slide.style.transform = '';
+      slide.style.opacity = '';
+    }
+    document.body.style.overflow = '';
+  }
+
+  nextPhoto() {
+    const project = this.projectsData[this.currentProjIndex];
+    if (!project || !project.photos || project.photos.length === 0) return;
+    this.currentPhotoIndex = (this.currentPhotoIndex + 1) % project.photos.length;
+    this.renderModalPhoto('next');
+  }
+
+  prevPhoto() {
+    const project = this.projectsData[this.currentProjIndex];
+    if (!project || !project.photos || project.photos.length === 0) return;
+    this.currentPhotoIndex = (this.currentPhotoIndex - 1 + project.photos.length) % project.photos.length;
+    this.renderModalPhoto('prev');
+  }
+
+  renderModalPhoto(direction = '') {
+    const project = this.projectsData[this.currentProjIndex];
+    if (!project || !project.photos || project.photos.length === 0) return;
+
+    const photo = project.photos[this.currentPhotoIndex];
+    if (!photo) return;
+
+    const titleEl = document.getElementById('projModalTitle');
+    const projNameEl = document.getElementById('projModalProjName');
+    const counterEl = document.getElementById('projModalCounter');
+    const slideEl = document.getElementById('projModalSlide');
+
+    if (titleEl) titleEl.textContent = photo.title;
+    if (projNameEl) projNameEl.textContent = project.title;
+    if (counterEl) counterEl.textContent = `${this.currentPhotoIndex + 1} / ${project.photos.length}`;
+
+    if (slideEl) {
+      slideEl.style.transition = 'none';
+      if (direction === 'next') {
+        slideEl.style.transform = 'translateX(28px)';
+        slideEl.style.opacity = '0.35';
+      } else if (direction === 'prev') {
+        slideEl.style.transform = 'translateX(-28px)';
+        slideEl.style.opacity = '0.35';
+      }
+
+      if (photo.image || photo.src) {
+        slideEl.innerHTML = `<img src="${photo.image || photo.src}" alt="${photo.title}" class="proj-modal-img" />`;
+      } else {
+        slideEl.innerHTML = `
+          <div class="proj-modal-mockup" style="background: radial-gradient(circle at 30% 30%, ${photo.color || '#3b82f6'}dd, #0a0a0c)">
+            <div class="proj-modal-mockup-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <span class="proj-modal-mockup-tag">${photo.title}</span>
+            <span class="proj-modal-mockup-hint">Pratinjau Antarmuka & Tangkapan Layar Fitur</span>
+          </div>
+        `;
+      }
+
+      requestAnimationFrame(() => {
+        slideEl.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+        slideEl.style.transform = 'translateX(0)';
+        slideEl.style.opacity = '1';
+      });
+    }
+  }
+
   switchProject(index, playSpin = true) {
     this.currentProjIndex = index;
     const project = this.projectsData[index];
     if (!project) return;
 
-    // 1. Update 3D Coin Model Texture & Rim Color
+    // 1. Update 3D Model Texture, Geometry & Rim Color (thickness follows logo silhouette!)
     if (this.coin && this.projTextures[index]) {
       this.frontMat.map = this.projTextures[index];
-      this.backMat.map = this.projBackTextures ? this.projBackTextures[index] : this.projTextures[index];
+      this.backMat.map = this.projTextures[index];
 
-      if (project.id === 'beo-creative') {
-        this.rimMat.transparent = true;
-        this.rimMat.opacity = 0;
-        this.rimMat.visible = false;
-      } else {
-        this.rimMat.transparent = false;
-        this.rimMat.opacity = 1;
-        this.rimMat.visible = true;
-        this.rimMat.color.set(project.rimColor);
+      if (this.logoGeometries[project.id]) {
+        this.coin.geometry = this.logoGeometries[project.id];
       }
+
+      this.rimMat.transparent = false;
+      this.rimMat.opacity = 1;
+      this.rimMat.visible = true;
+      this.rimMat.color.set(project.rimColor);
 
       this.frontMat.needsUpdate = true;
       this.backMat.needsUpdate = true;
       this.rimMat.needsUpdate = true;
 
       if (playSpin) {
-        this.spinVelocity = 0.38;
+        this.coin.rotation.y = 0;
+        this.spinVelocity = 0.28;
       }
-    }
-
-    // Update Podium Ring glow
-    const podiumRing = document.getElementById('projPodiumRing');
-    if (podiumRing) {
-      podiumRing.style.borderColor = project.accentColor;
-      podiumRing.style.boxShadow = `0 0 24px ${project.accentColor}55`;
     }
 
     // 2. Update 3D Turntable Carousel Positions
@@ -419,8 +684,6 @@ export class ProjectsComponent {
     setTimeout(() => {
       const titleEl = document.getElementById('projTitle');
       const subtitleEl = document.getElementById('projSubtitle');
-      const catEl = document.getElementById('projCategoryBadge');
-      const yearEl = document.getElementById('projYearPill');
       const descEl = document.getElementById('projDescText');
       const liveBtn = document.getElementById('projLiveBtn');
       const repoBtn = document.getElementById('projRepoBtn');
@@ -431,33 +694,81 @@ export class ProjectsComponent {
 
       if (titleEl) titleEl.textContent = project.title;
       if (subtitleEl) subtitleEl.textContent = project.subtitle;
-      if (catEl) catEl.textContent = project.category;
-      if (yearEl) yearEl.textContent = project.year;
       if (descEl) descEl.textContent = project.description;
-      if (liveBtn) liveBtn.href = project.liveUrl;
-      if (repoBtn) repoBtn.href = project.repoUrl;
+
+      // Action Buttons: Github/Source on Left, Live Project on Right (Only shown if active)
+      if (liveBtn) {
+        if (project.liveUrl && project.liveUrl !== '#' && project.liveUrl !== '') {
+          liveBtn.href = project.liveUrl;
+          liveBtn.style.display = 'inline-flex';
+        } else {
+          liveBtn.removeAttribute('href');
+          liveBtn.style.display = 'none';
+        }
+      }
+      if (repoBtn) {
+        if (project.repoUrl && project.repoUrl !== '') {
+          repoBtn.href = project.repoUrl;
+          repoBtn.style.display = 'inline-flex';
+        } else {
+          repoBtn.style.display = 'none';
+        }
+      }
 
       // Highlights
       if (highlightsEl) {
         highlightsEl.innerHTML = project.highlights.map(h => `<li>${h}</li>`).join('');
       }
 
-      // Photos / Gallery Mockups
+      // Reset scroll position on unified scroll containers
+      const descScroll = document.getElementById('projDescScroll');
+      if (descScroll) descScroll.scrollTop = 0;
+      const techScroll = document.getElementById('projTechScroll');
+      if (techScroll) techScroll.scrollTop = 0;
+
+      // Reset photo modal on project change
+      this.closePhotoModal();
+
+      // Photos / Gallery Mockups (Clean, Clickable cards to open lightbox modal)
       if (photosGrid) {
-        photosGrid.innerHTML = project.photos.map(photo => `
-          <div class="proj-photo-card">
-            <div class="proj-photo-preview" style="background: linear-gradient(135deg, ${photo.color}, #111113)">
-              <span>${photo.tag}</span>
+        photosGrid.innerHTML = project.photos.map((photo, pIdx) => `
+          <div class="proj-photo-card" role="button" tabindex="0" data-photo-index="${pIdx}" aria-label="Lihat gambar ${photo.title}">
+            <div class="proj-photo-preview">
+              ${photo.image ? `
+                <img src="${photo.image}" alt="${photo.title}" class="proj-photo-thumb" loading="lazy" />
+              ` : `
+                <div class="proj-photo-placeholder" style="background: linear-gradient(135deg, ${photo.color || '#3b82f6'}, #111113)">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                    <polyline points="21 15 16 10 5 21"></polyline>
+                  </svg>
+                </div>
+              `}
             </div>
             <div class="proj-photo-info">
               <span class="proj-photo-title">${photo.title}</span>
-              <span class="proj-photo-tag">${project.title}</span>
             </div>
           </div>
         `).join('');
+
+        const cards = photosGrid.querySelectorAll('.proj-photo-card');
+        cards.forEach(card => {
+          card.addEventListener('click', () => {
+            const idx = parseInt(card.dataset.photoIndex, 10);
+            this.openPhotoModal(idx);
+          });
+          card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              const idx = parseInt(card.dataset.photoIndex, 10);
+              this.openPhotoModal(idx);
+            }
+          });
+        });
       }
 
-      // Tech Stack Hanging Keychains (Cloned from marquee SVGs)
+      // Primary Tech Stack Hanging Keychains (Cloned from marquee SVGs)
       if (keychainsRack) {
         keychainsRack.innerHTML = '';
         project.techStack.forEach(tech => {
@@ -468,6 +779,20 @@ export class ProjectsComponent {
             keychainsRack.appendChild(clone);
           }
         });
+      }
+
+      // Auxiliary / Other Technologies (Badges saja, berlaku seterusnya)
+      const otherTechSec = document.getElementById('projOtherTechSection');
+      const otherTechList = document.getElementById('projOtherTechList');
+      if (otherTechSec && otherTechList) {
+        if (project.otherTech && project.otherTech.length > 0) {
+          otherTechSec.style.display = 'flex';
+          otherTechList.innerHTML = project.otherTech.map(techName => `
+            <span class="proj-tech-badge">${techName}</span>
+          `).join('');
+        } else {
+          otherTechSec.style.display = 'none';
+        }
       }
 
       // Team Members
@@ -498,6 +823,9 @@ export class ProjectsComponent {
     const panelPhotos = document.getElementById('projPanelPhotos');
     const panelTech = document.getElementById('projPanelTech');
 
+    // Close photo modal when switching tabs
+    this.closePhotoModal();
+
     const tabs = [tabDesc, tabPhotos, tabTech];
 
     tabs.forEach(t => {
@@ -510,6 +838,15 @@ export class ProjectsComponent {
     if (panelDesc) panelDesc.classList.toggle('active', tabName === 'desc');
     if (panelPhotos) panelPhotos.classList.toggle('active', tabName === 'photos');
     if (panelTech) panelTech.classList.toggle('active', tabName === 'tech');
+
+    if (tabName === 'desc') {
+      const descScroll = document.getElementById('projDescScroll');
+      if (descScroll) descScroll.scrollTop = 0;
+    }
+    if (tabName === 'tech') {
+      const techScroll = document.getElementById('projTechScroll');
+      if (techScroll) techScroll.scrollTop = 0;
+    }
   }
 
   initEventListeners() {
@@ -546,12 +883,6 @@ export class ProjectsComponent {
       backBtn.addEventListener('click', () => this.closeProjectDetail());
     }
 
-    // Selection View Hint Button (Open detail)
-    const hintBtn = document.getElementById('projSelectionHint');
-    if (hintBtn) {
-      hintBtn.addEventListener('click', () => this.openProjectDetail(this.currentProjIndex));
-    }
-
     // Detail View Prev & Next Switcher
     const detPrev = document.getElementById('projDetailPrevBtn');
     const detNext = document.getElementById('projDetailNextBtn');
@@ -570,32 +901,281 @@ export class ProjectsComponent {
       });
     }
 
-    // Escape key closes detail view
+    // Lightbox Photo Modal Controls
+    const photoModal = document.getElementById('projPhotoModal');
+    const modalClose = document.getElementById('projModalCloseBtn');
+    const modalBottomClose = document.getElementById('projModalBottomCloseBtn');
+    const modalBackdrop = document.getElementById('projModalBackdrop');
+    const modalPrev = document.getElementById('projModalPrevBtn');
+    const modalNext = document.getElementById('projModalNextBtn');
+
+    const handleModalClose = (e) => {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.closePhotoModal();
+    };
+
+    if (modalClose) {
+      modalClose.addEventListener('click', handleModalClose);
+      modalClose.addEventListener('touchend', handleModalClose);
+    }
+    if (modalBottomClose) {
+      modalBottomClose.addEventListener('click', handleModalClose);
+      modalBottomClose.addEventListener('touchend', handleModalClose);
+    }
+    if (modalBackdrop) {
+      modalBackdrop.addEventListener('click', handleModalClose);
+      modalBackdrop.addEventListener('touchend', handleModalClose);
+    }
+    if (photoModal) {
+      photoModal.addEventListener('click', (e) => {
+        if (e.target === photoModal || e.target === modalBackdrop) {
+          handleModalClose(e);
+        }
+      });
+      const modalContainer = photoModal.querySelector('.proj-modal-container');
+      if (modalContainer) {
+        modalContainer.addEventListener('click', (e) => {
+          e.stopPropagation();
+        });
+      }
+    }
+    if (modalPrev) {
+      modalPrev.addEventListener('click', () => this.prevPhoto());
+    }
+    if (modalNext) {
+      modalNext.addEventListener('click', () => this.nextPhoto());
+    }
+
+    // Touch swipe & Mouse drag on Photo Modal Viewport (Swipe horizontally / Drag down to dismiss)
+    const modalViewport = document.getElementById('projModalViewport');
+    const modalSlide = document.getElementById('projModalSlide');
+
+    if (modalViewport && modalSlide) {
+      let isDragging = false;
+      let startX = 0;
+      let startY = 0;
+      let currentDx = 0;
+      let currentDy = 0;
+
+      const onStart = (clientX, clientY) => {
+        if (!this.isPhotoModalOpen) return;
+        isDragging = true;
+        startX = clientX;
+        startY = clientY;
+        currentDx = 0;
+        currentDy = 0;
+        modalSlide.style.transition = 'none';
+      };
+
+      const onMove = (clientX, clientY) => {
+        if (!isDragging) return;
+        currentDx = clientX - startX;
+        currentDy = clientY - startY;
+
+        // Downward drag to dismiss
+        if (currentDy > 15 && Math.abs(currentDy) > Math.abs(currentDx)) {
+          modalSlide.style.transform = `translateY(${currentDy * 0.8}px) scale(${Math.max(0.85, 1 - currentDy / 800)})`;
+          modalSlide.style.opacity = `${Math.max(0.35, 1 - currentDy / 350)}`;
+          return;
+        }
+
+        modalSlide.style.transform = `translateX(${currentDx * 0.75}px)`;
+        modalSlide.style.opacity = '1';
+      };
+
+      const onEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        modalSlide.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+
+        // Downward pull to dismiss
+        if (currentDy > 70 && Math.abs(currentDy) > Math.abs(currentDx)) {
+          this.closePhotoModal();
+          return;
+        }
+
+        if (currentDx < -45) {
+          this.nextPhoto();
+        } else if (currentDx > 45) {
+          this.prevPhoto();
+        } else {
+          modalSlide.style.transform = 'translate(0, 0) scale(1)';
+          modalSlide.style.opacity = '1';
+        }
+      };
+
+      // Touch events (mobile / tablet swipe)
+      modalViewport.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) onStart(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+
+      modalViewport.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) onMove(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+
+      modalViewport.addEventListener('touchend', () => onEnd(), { passive: true });
+      modalViewport.addEventListener('touchcancel', () => onEnd(), { passive: true });
+
+      // Mouse drag events (desktop flick & drag)
+      modalViewport.addEventListener('mousedown', (e) => {
+        onStart(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isDragging) onMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isDragging) onEnd();
+      });
+    }
+
+    // Keyboard navigation (Escape, Left Arrow, Right Arrow)
     window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        const detView = document.getElementById('projDetailView');
-        if (detView && detView.style.display !== 'none') {
+      const detView = document.getElementById('projDetailView');
+      const isDetVisible = detView && detView.style.display !== 'none';
+
+      if (this.isPhotoModalOpen) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          this.closePhotoModal();
+          return;
+        }
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          this.prevPhoto();
+          return;
+        }
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          this.nextPhoto();
+          return;
+        }
+      } else if (e.key === 'Escape') {
+        if (isDetVisible) {
           this.closeProjectDetail();
         }
       }
     });
 
-    // Touch Swipe on 3D Selector Carousel Track
+    // Touch Swipe & Mouse Drag on 3D Selector Carousel
+    const selectorWrapper = document.querySelector('.project-selector-wrapper');
     const selectorTrack = document.getElementById('projectSelectorTrack');
-    if (selectorTrack) {
-      let touchStartX = 0;
-      selectorTrack.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) touchStartX = e.touches[0].clientX;
-      }, { passive: true });
-      selectorTrack.addEventListener('touchend', (e) => {
-        if (e.changedTouches.length > 0) {
-          const dx = e.changedTouches[0].clientX - touchStartX;
-          if (Math.abs(dx) > 35) {
-            const nextIdx = (this.currentProjIndex + 1) % this.projectsData.length;
-            this.switchProject(nextIdx, true);
+    if (selectorWrapper && selectorTrack) {
+      let startX = 0;
+      let startY = 0;
+      let currentDx = 0;
+      let isTracking = false;
+      let isHorizontalSwipe = false;
+      let rafId = null;
+      this.suppressSelectorClick = false;
+
+      const updateDragVisual = () => {
+        if (!isHorizontalSwipe) return;
+        const dragShift = currentDx * 0.42;
+        const dragTilt = currentDx * 0.08;
+        selectorTrack.style.transition = 'none';
+        selectorTrack.style.transform = `translateX(${dragShift}px) rotateY(${dragTilt}deg)`;
+        rafId = null;
+      };
+
+      const onStart = (clientX, clientY) => {
+        const selView = document.getElementById('projSelectionView');
+        if (selView && (selView.style.display === 'none' || getComputedStyle(selView).display === 'none')) return;
+
+        startX = clientX;
+        startY = clientY;
+        currentDx = 0;
+        isTracking = true;
+        isHorizontalSwipe = false;
+      };
+
+      const onMove = (clientX, clientY) => {
+        if (!isTracking) return;
+
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+
+        if (!isHorizontalSwipe) {
+          if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 8) {
+            isTracking = false;
+            return;
+          }
+          if (Math.abs(dx) > 8) {
+            isHorizontalSwipe = true;
+            selectorWrapper.classList.add('is-dragging');
           }
         }
+
+        if (isHorizontalSwipe) {
+          currentDx = dx;
+          if (!rafId) {
+            rafId = requestAnimationFrame(updateDragVisual);
+          }
+        }
+      };
+
+      const onEnd = () => {
+        if (!isTracking) return;
+        isTracking = false;
+        if (rafId) {
+          cancelAnimationFrame(rafId);
+          rafId = null;
+        }
+        selectorWrapper.classList.remove('is-dragging');
+
+        if (isHorizontalSwipe) {
+          selectorTrack.style.transition = 'transform 0.38s cubic-bezier(0.2, 0.9, 0.3, 1)';
+          selectorTrack.style.transform = '';
+
+          if (Math.abs(currentDx) > 32) {
+            this.suppressSelectorClick = true;
+            setTimeout(() => { this.suppressSelectorClick = false; }, 200);
+
+            if (currentDx < 0) {
+              const nextIdx = (this.currentProjIndex + 1) % this.projectsData.length;
+              this.switchProject(nextIdx, true);
+            } else {
+              const nextIdx = (this.currentProjIndex - 1 + this.projectsData.length) % this.projectsData.length;
+              this.switchProject(nextIdx, true);
+            }
+          } else {
+            this.suppressSelectorClick = true;
+            setTimeout(() => { this.suppressSelectorClick = false; }, 100);
+          }
+        } else {
+          selectorTrack.style.transform = '';
+        }
+      };
+
+      // Touch events (mobile & tablet)
+      selectorWrapper.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) onStart(e.touches[0].clientX, e.touches[0].clientY);
       }, { passive: true });
+
+      selectorWrapper.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) onMove(e.touches[0].clientX, e.touches[0].clientY);
+      }, { passive: true });
+
+      selectorWrapper.addEventListener('touchend', () => onEnd(), { passive: true });
+      selectorWrapper.addEventListener('touchcancel', () => onEnd(), { passive: true });
+
+      // Mouse drag events (desktop)
+      selectorWrapper.addEventListener('mousedown', (e) => {
+        if (e.target && e.target.closest && e.target.closest('.proj-nav-btn')) return;
+        onStart(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isTracking) onMove(e.clientX, e.clientY);
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isTracking) onEnd();
+      });
     }
 
     // Touch Swipe on Detail Card Body to switch tabs
@@ -608,8 +1188,8 @@ export class ProjectsComponent {
 
       cardBody.addEventListener('touchstart', (e) => {
         if (e.touches.length > 0) {
-          // If touching inside horizontally scrollable keychains rack, do not trigger tab swipe
-          if (e.target && e.target.closest && e.target.closest('.proj-keychains-rack')) {
+          // If touching inside keychains rack or photo viewer, do not trigger tab swipe
+          if (e.target && e.target.closest && (e.target.closest('.proj-keychains-rack') || e.target.closest('.proj-photo-viewer'))) {
             isHorizontalSwipe = false;
             return;
           }
@@ -621,7 +1201,7 @@ export class ProjectsComponent {
 
       cardBody.addEventListener('touchmove', (e) => {
         if (e.touches.length > 0) {
-          if (e.target && e.target.closest && e.target.closest('.proj-keychains-rack')) {
+          if (e.target && e.target.closest && (e.target.closest('.proj-keychains-rack') || e.target.closest('.proj-photo-viewer'))) {
             return;
           }
           const dx = e.touches[0].clientX - touchStartX;
@@ -647,13 +1227,21 @@ export class ProjectsComponent {
         }
       }, { passive: true });
     }
+
+    // Window resize handler to maintain mobile / desktop layout
+    window.addEventListener('resize', () => {
+      this.updateMobileLayout();
+      this.updateTransform();
+    });
   }
 
   resize() {
+    this.updateMobileLayout();
     this.updateTransform();
   }
 
   render(delta, time, isVisible = true) {
+    if (!this.isDetailOpen) return;
     if (isVisible && this.scene && this.camera && this.renderer && this.coin) {
       if (!this.isDragging) {
         this.coin.rotation.y += 0.012 + this.spinVelocity;

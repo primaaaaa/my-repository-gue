@@ -21,6 +21,7 @@ import { AboutComponent } from './components/AboutComponent.js';
 import { EducationComponent } from './components/EducationComponent.js';
 import { TechStackComponent } from './components/TechStackComponent.js';
 import { ProjectsComponent } from './components/ProjectsComponent.js';
+import { ContactComponent } from './components/ContactComponent.js';
 
 class App {
   constructor() {
@@ -42,12 +43,14 @@ class App {
     this.eduComponent = new EducationComponent(this.skinGenerator, this.isMobileDevice);
     this.techStackComponent = new TechStackComponent();
     this.projectsComponent = new ProjectsComponent(this.isMobileDevice);
+    this.contactComponent = new ContactComponent(this.skinGenerator, this.isMobileDevice);
 
     // Visibility flags for 0% GPU sleep mode
     this.isHeroVisible = true;
     this.isAboutVisible = false;
     this.isEduVisible = false;
     this.isProjVisible = false;
+    this.isContactVisible = false;
 
     // Global coordinator initialization
     this.initVisibilityObservers();
@@ -96,6 +99,17 @@ class App {
       }, { rootMargin: '150px 0px' });
       projObserver.observe(projEl);
     }
+
+    const contactEl = document.getElementById('contact');
+    if (contactEl && 'IntersectionObserver' in window) {
+      const contactObserver = new IntersectionObserver((entries) => {
+        this.isContactVisible = entries[0].isIntersecting;
+        if (entries[0].isIntersecting && this.contactComponent) {
+          this.contactComponent.triggerPlaceCard();
+        }
+      }, { threshold: 0.2, rootMargin: '100px 0px' });
+      contactObserver.observe(contactEl);
+    }
   }
 
   // ========================================================
@@ -121,6 +135,7 @@ class App {
         if (this.aboutComponent) this.aboutComponent.resize();
         if (this.eduComponent) this.eduComponent.resize();
         if (this.projectsComponent) this.projectsComponent.resize();
+        if (this.contactComponent) this.contactComponent.resize();
       }
     });
 
@@ -203,6 +218,10 @@ class App {
 
     if (this.projectsComponent) {
       this.projectsComponent.render(delta, time, this.isProjVisible);
+    }
+
+    if (this.contactComponent) {
+      this.contactComponent.render(delta, time, this.mouseNDC, this.raycaster, this.isContactVisible);
     }
   }
 }
