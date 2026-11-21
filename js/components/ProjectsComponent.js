@@ -89,7 +89,7 @@ export class ProjectsComponent {
           { title: 'Detail Percakapan Utas Forum', image: 'assets/project-ui/medigo/detail-forum.png', color: '#0284c7' },
           { title: 'Asisten Virtual AI MediBot', image: 'assets/project-ui/medigo/medibot-ai-chatbot.png', color: '#0ea5e9' }
         ],
-        techStack: ['laravel', 'bootstrap', 'sql'],
+        techStack: ['laravel', 'bootstrap', 'sql', 'python'],
         otherTech: ['Gemini API', 'Leaflet js'],
         team: [
           { name: 'Muhammad Prima Yudhistira', role: 'Project Manager & Frontend Developer' },
@@ -102,17 +102,18 @@ export class ProjectsComponent {
         id: 'beabot',
         title: 'Beabot',
         shape: 'circle',
-        subtitle: 'Asisten Suara AI Cerdas & Platform Komunikasi Terpadu',
+        subtitle: 'Platform AI Persiapan Wawancara & Review Esai Beasiswa',
         logoTexture: 'assets/projects/purple_app_pixel.png',
         logoRaw: 'assets/projects/purple_app_raw.png',
         themeColor: '#6b21a8',
         accentColor: '#9333ea',
         rimColor: 0x9333ea,
-        description: 'Platform asisten suara berbasis kecerdasan buatan (Voice AI Agent) yang dirancang untuk melakukan interaksi percakapan natural secara real-time, mengotomasi alur komunikasi, dan merespons kebutuhan pengguna dengan latensi rendah.',
+        description: 'Platform persiapan beasiswa berbasis kecerdasan buatan yang berfokus pada simulasi wawancara beasiswa interaktif menggunakan Voice AI Agent secara real-time, serta dilengkapi fitur review esai otomatis untuk membantu calon penerima beasiswa menyempurnakan aplikasi mereka.',
         highlights: [
-          'Interaksi percakapan suara natural berlatensi rendah ditenagai VAPI AI Voice Agent',
-          'Pemahaman konteks mendalam bertenaga model kecerdasan buatan Gemini API',
-          'Arsitektur backend tangguh berbasis Express JS dan manajemen database SQL terstruktur'
+          'Simulasi wawancara beasiswa interaktif real-time berbasis suara alami dengan latensi rendah bertenaga VAPI Voice AI',
+          'Fitur AI Essay Review untuk menganalisis struktur, kesesuaian kriteria seleksi, dan memberikan rekomendasi revisi esai beasiswa',
+          'Penilaian cerdas & umpan balik mendalam bertenaga model Gemini API untuk meningkatkan kesiapan dan rasa percaya diri kandidat',
+          'Arsitektur web modern berbasis Next.js, backend Express JS, dan manajemen database SQL terstruktur'
         ],
         liveUrl: null,
         repoUrl: '#',
@@ -144,15 +145,19 @@ export class ProjectsComponent {
         description: 'Platform web komprehensif yang dirancang untuk mempermudah calon wisatawan menjelajahi keindahan Luwihaja Hill serta melakukan reservasi akomodasi Villa Air secara instan dengan kalender ketersediaan interaktif dan konfirmasi otomatis.',
         highlights: [
           'Sistem reservasi kamar & kalkulasi tarif real-time berbasis tanggal menginap',
-          'Antarmuka ramah mobile dengan visualisasi katalog tipe villa dan fasilitas lengkap',
+          'Sistem review kamar dari pelanggan serta panduan fasilitas yang tersedia di Luwihaja Hill',
           'Integrasi rute lokasi dan panduan wisata terintegrasi di kawasan Luwihaja Hill'
         ],
         liveUrl: null,
         repoUrl: '#',
         photos: [
-          { title: 'Beranda Luwihaja Hill', tag: 'Landing Page', color: '#1f4325' },
-          { title: 'Katalog Tipe Villa', tag: 'Accommodations', color: '#275830' },
-          { title: 'Alur Reservasi Cepat', tag: 'Booking Engine', color: '#31693a' }
+          { title: 'Beranda & Informasi Utama', image: 'assets/project-ui/luwihaja-hill/home beranda.png', color: '#1f4325' },
+          { title: 'Katalog Pilihan Tipe Akomodasi', image: 'assets/project-ui/luwihaja-hill/Akomodasi.png', color: '#275830' },
+          { title: 'Detail Informasi & Review Kamar', image: 'assets/project-ui/luwihaja-hill/Detail Akomodasi (1).png', color: '#2f693b' },
+          { title: 'Panduan Fasilitas Luwihaja Hill', image: 'assets/project-ui/luwihaja-hill/Fasilitas.png', color: '#1e3f24' },
+          { title: 'Pemilihan Tanggal & Booking Villa', image: 'assets/project-ui/luwihaja-hill/Booking Villa.png', color: '#275830' },
+          { title: 'Formulir Konfirmasi Reservasi Tamu', image: 'assets/project-ui/luwihaja-hill/reservais.png', color: '#31693a' },
+          { title: 'Validasi Input Data Reservasi', image: 'assets/project-ui/luwihaja-hill/validasi input Detail Akomodasi.png', color: '#2b5834' }
         ],
         techStack: ['laravel', 'bootstrap', 'sql'],
         otherTech: [],

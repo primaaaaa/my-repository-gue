@@ -6,8 +6,8 @@
  * - Left red asterisk icon, center glowing paper exit slit, right LED status dot.
  * - CV paper emerges downwards with natural curved paper drape & soft drop shadow.
  * - High-resolution canvas texture with stats grid, experience, and red starburst badge.
- * - Interactive raycasting: click to trigger realistic 2-second dispensing animation.
- * - Auto-triggers /CV_Portofolio.pdf download upon print completion.
+ * - Interactive raycasting: click to trigger realistic 1.5-second dispensing animation.
+ * - Auto-triggers Muhammad Prima Yudhistira-resume.pdf download upon print completion.
  * - Seamless handoff to restore lanyard after download.
  */
 
@@ -17,6 +17,7 @@ export class PrinterComponent {
   constructor(options = {}) {
     this.container = options.container || document.getElementById('printerCanvasWrapper');
     this.canvas = options.canvas || document.getElementById('printerCanvas');
+    this.isMobileDevice = options.isMobileDevice || (typeof window !== 'undefined' && window.innerWidth <= 900);
     this.onPrintComplete = options.onPrintComplete || null;
     this.onDismiss = options.onDismiss || null;
 
@@ -46,13 +47,13 @@ export class PrinterComponent {
     this.isPrinted = false;
     this.isLocked = false;
     this.printStartTime = 0;
-    this.printDuration = 2000; // 2 seconds
+    this.printDuration = 1500; // 1.5 seconds
     this.printProgress = 0;
 
     // Paper Y Positions (Dispensing downwards from top slot)
-    // Slot is at Y = 1.32. Paper height is 3.3.
-    // At start: tucked inside, only bottom ~0.25 peeking out
-    this.paperStartY = 2.75;
+    // Slot is at Y = 1.22. Paper height is 3.32.
+    // At start: tucked inside, flush with slot
+    this.paperStartY = 2.88;
     // At end: fully dispensed down
     this.paperEndY = -0.42;
 
@@ -72,8 +73,8 @@ export class PrinterComponent {
     const width = this.container ? this.container.clientWidth : 480;
     const height = this.container ? this.container.clientHeight : 440;
     this.camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 50);
-    this.camera.position.set(0, 0.65, 5.8);
-    this.camera.lookAt(0, 0.35, 0);
+    this.camera.position.set(0, 0.52, 6.0);
+    this.camera.lookAt(0, 0.28, 0);
 
     // 3. Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -84,7 +85,15 @@ export class PrinterComponent {
     });
     this.renderer.setSize(width, height, false);
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    const dpr = this.isMobileDevice
+      ? Math.min(window.devicePixelRatio || 1, 1.25)
+      : Math.min(window.devicePixelRatio || 1, 2);
+    this.renderer.setPixelRatio(dpr);
     this.renderer.outputColorSpace = THREE.SRGBColorSpace;
+    this.renderer.localClippingEnabled = true;
+
+    // Horizontal clipping plane at the output slit (Y = 1.22): Discards any geometry above slot
+    this.clipPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 1.22);
 
     // 4. Lighting (Clean high-fashion studio lighting)
     this.setupLighting();
@@ -123,185 +132,259 @@ export class PrinterComponent {
     canvas.height = 1420;
     const ctx = canvas.getContext('2d');
 
-    // Clean White Paper Sheet
+    // 1. Clean Paper Background
     ctx.fillStyle = '#FFFFFF';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Subtle edge border
-    ctx.strokeStyle = '#F1F5F9';
-    ctx.lineWidth = 3;
-    ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48);
+    // 2. Pixel Border (Outer bold, inner subtle)
+    ctx.strokeStyle = '#0F172A';
+    ctx.lineWidth = 4;
+    ctx.strokeRect(14, 14, canvas.width - 28, canvas.height - 28);
 
-    // --- TOP SLOGAN / HEADER ---
-    ctx.fillStyle = '#D11A2A';
-    ctx.font = '800 16px "Space Grotesk", sans-serif';
-    ctx.fillText('PORTFOLIO & CURRICULUM VITAE • 2026', 64, 75);
+    ctx.strokeStyle = '#E2E8F0';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
 
+    // 3. Continuous Printer Tractor-Feed Perforated Holes (Left & Right Margins)
+    for (let py = 32; py < canvas.height - 32; py += 28) {
+      ctx.fillStyle = '#E2E8F0';
+      ctx.fillRect(5, py, 6, 9);
+      ctx.fillStyle = '#94A3B8';
+      ctx.fillRect(6, py + 1, 4, 7);
+
+      ctx.fillStyle = '#E2E8F0';
+      ctx.fillRect(canvas.width - 11, py, 6, 9);
+      ctx.fillStyle = '#94A3B8';
+      ctx.fillRect(canvas.width - 10, py + 1, 4, 7);
+    }
+
+    // Helper: Pixel Divider Line
+    const drawPixelDivider = (yPos) => {
+      for (let x = 54; x < canvas.width - 54; x += 12) {
+        ctx.fillStyle = '#0F172A';
+        ctx.fillRect(x, yPos, 7, 3);
+        ctx.fillStyle = '#CBD5E1';
+        ctx.fillRect(x + 7, yPos, 5, 3);
+      }
+    };
+
+    // Helper: Pixel Bullet Point
+    const drawBullet = (x, yPos) => {
+      ctx.fillStyle = '#D11A2A';
+      ctx.fillRect(x, yPos - 10, 6, 6);
+      ctx.fillStyle = '#FECACA';
+      ctx.fillRect(x + 1, yPos - 9, 2, 2);
+    };
+
+    // --- TOP SLOGAN & HEADER ---
     ctx.fillStyle = '#0F172A';
     ctx.font = '900 36px "Space Grotesk", sans-serif';
-    ctx.fillText('MUHAMMAD PRIMA YUDHISTIRA', 64, 125);
+    ctx.fillText('MUHAMMAD PRIMA YUDHISTIRA', 54, 72);
 
     ctx.fillStyle = '#475569';
-    ctx.font = '600 16px "Plus Jakarta Sans", sans-serif';
-    ctx.fillText('Software Engineer & Project Manager — IPB University', 64, 160);
+    ctx.font = '600 13.5px "Space Grotesk", monospace, sans-serif';
+    ctx.fillText('+62 895-2960-9749  |  primayudhistira040@gmail.com  |  linkedin.com/in/prima-yudhistira  |  primayudhistira.vercel.app', 54, 102);
 
-    // Abstract graphic curve header accent (as in reference image)
-    ctx.strokeStyle = 'rgba(209, 26, 42, 0.18)';
-    ctx.lineWidth = 8;
-    ctx.beginPath();
-    ctx.arc(canvas.width - 120, 110, 70, 0, Math.PI * 1.6);
-    ctx.stroke();
+    ctx.fillStyle = '#64748B';
+    ctx.font = '700 13px "Space Grotesk", sans-serif';
+    ctx.fillText('Bekasi, Jawa Barat', 54, 124);
 
-    ctx.strokeStyle = 'rgba(209, 26, 42, 0.35)';
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.arc(canvas.width - 120, 110, 50, 0.2, Math.PI * 1.8);
-    ctx.stroke();
-
-    // --- METRIC STATS ROW (4 Columns, exactly matching reference image!) ---
-    let statY = 245;
-    const stats = [
-      { val: '2024-28', label: 'SV IPB Univ', sub: 'Rekayasa Perangkat Lunak' },
-      { val: '10+', label: 'Featured Projects', sub: 'Web, Mobile, & UI/UX' },
-      { val: '100%', label: 'Commitment Rate', sub: 'Agile & Team Leadership' },
-      { val: '1st', label: 'Juara 1 LKS Kota', sub: 'Web Technologies' }
-    ];
-
-    const colWidth = (canvas.width - 128) / 4;
-    stats.forEach((s, idx) => {
-      const colX = 64 + idx * colWidth;
-      ctx.fillStyle = '#0F172A';
-      ctx.font = '900 32px "Space Grotesk", sans-serif';
-      ctx.fillText(s.val, colX, statY);
-
-      ctx.fillStyle = '#D11A2A';
-      ctx.font = '700 13px "Space Grotesk", sans-serif';
-      ctx.fillText(s.label, colX, statY + 22);
-
-      ctx.fillStyle = '#64748B';
-      ctx.font = '500 11.5px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(s.sub, colX, statY + 38);
-    });
-
-    // Divider Line
-    ctx.strokeStyle = '#E2E8F0';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(64, statY + 65);
-    ctx.lineTo(canvas.width - 64, statY + 65);
-    ctx.stroke();
-
-    // --- EXPERIENCE / RIWAYAT PROJEK SECTION ---
-    let expY = 360;
-    ctx.fillStyle = '#0F172A';
-    ctx.font = '900 24px "Space Grotesk", sans-serif';
-    ctx.fillText('Experience & Key Highlights', 64, expY);
-    expY += 36;
-
-    const experiences = [
-      {
-        role: 'Full-Stack Web Developer & Team Lead',
-        inst: 'MediGo Healthcare Platform',
-        period: '2025 — Sekarang',
-        desc: 'Merancang arsitektur telemedicine terintegrasi dengan reservasi faskes, rekam medis digital, dan real-time queue management.'
-      },
-      {
-        role: 'Lead Frontend & Interactive 3D Designer',
-        inst: 'WertuGo Tourism System',
-        period: '2024 — 2025',
-        desc: 'Membangun aplikasi pariwisata interaktif berbasis React, Tailwind, dan modul Three.js dengan optimasi performa tinggi.'
-      },
-      {
-        role: 'Software Engineering Scholar',
-        inst: 'IPB University (Sekolah Vokasi)',
-        period: '2024 — 2028',
-        desc: 'Fokus pada Software Engineering, Project Management, Agile Framework, arsitektur basis data, dan kepemimpinan tim.'
-      },
-      {
-        role: 'Juara 1 Web Technologies & Ketua IT Club',
-        inst: 'SMKN 5 Kota Bekasi',
-        period: '2021 — 2024',
-        desc: 'Mengembangkan sistem manajemen sekolah dan menjuarai Lomba Kompetensi Siswa (LKS) tingkat Kota Bekasi.'
-      }
-    ];
-
-    experiences.forEach(e => {
-      ctx.fillStyle = '#94A3B8';
-      ctx.font = '700 13px "Space Grotesk", sans-serif';
-      ctx.fillText(e.period, 64, expY);
-
-      ctx.fillStyle = '#0F172A';
-      ctx.font = '800 16px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(e.role, 240, expY);
-
-      ctx.fillStyle = '#D11A2A';
-      ctx.font = '700 14px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(` • ${e.inst}`, 240 + ctx.measureText(e.role).width + 6, expY);
-
-      ctx.fillStyle = '#475569';
-      ctx.font = '500 13px "Plus Jakarta Sans", sans-serif';
-      ctx.fillText(e.desc, 240, expY + 22);
-
-      expY += 68;
-    });
-
-    // Divider Line
+    // Summary Box with Pixel Accent
+    ctx.fillStyle = '#F8FAFC';
+    ctx.fillRect(54, 145, canvas.width - 108, 90);
     ctx.strokeStyle = '#E2E8F0';
     ctx.lineWidth = 1.5;
-    ctx.beginPath();
-    ctx.moveTo(64, expY + 10);
-    ctx.lineTo(canvas.width - 64, expY + 10);
-    ctx.stroke();
-    expY += 45;
+    ctx.strokeRect(54, 145, canvas.width - 108, 90);
 
-    // --- CORE TECHNOLOGIES (Clean Editorial Typography, No Filler Badges) ---
-    ctx.fillStyle = '#0F172A';
-    ctx.font = '900 20px "Space Grotesk", sans-serif';
-    ctx.fillText('Core Technologies & Frameworks', 64, expY);
-    expY += 28;
+    // Red left accent bar
+    ctx.fillStyle = '#D11A2A';
+    ctx.fillRect(54, 145, 6, 90);
 
     ctx.fillStyle = '#334155';
-    ctx.font = '600 14px "Space Grotesk", sans-serif';
-    ctx.fillText('React  •  Next.js  •  Laravel  •  Tailwind CSS  •  Python  •  Three.js  •  MySQL  •  MongoDB  •  Git  •  Agile', 64, expY);
-    expY += 34;
+    ctx.font = '500 13.5px "Plus Jakarta Sans", sans-serif';
+    const summaryLines = [
+      'Mahasiswa Teknologi Rekayasa Perangkat Lunak Sekolah Vokasi IPB University yang berfokus pada Web Development dan',
+      'Project Management. Terampil membangun aplikasi web interaktif dan mengelola alur kerja tim berbasis Agile. Adaptif terhadap',
+      'teknologi baru serta memiliki kemampuan komunikasi, kepemimpinan, dan eksekusi proyek secara end-to-end untuk solusi digital yang efektif.'
+    ];
+    summaryLines.forEach((line, idx) => {
+      ctx.fillText(line, 74, 172 + idx * 22);
+    });
 
-    // --- OFFICIAL RED STARBURST BADGE (Bottom Right, matching reference image!) ---
-    const starCenterX = canvas.width - 145;
-    const starCenterY = canvas.height - 140;
-    const outerRadius = 52;
-    const innerRadius = 38;
-    const points = 16;
+    const drawSectionHdr = (secY, title) => {
+      ctx.fillStyle = '#D11A2A';
+      ctx.font = '900 19px "Space Grotesk", sans-serif';
+      ctx.fillText(`[ ${title} ]`, 54, secY);
+      drawPixelDivider(secY + 10);
+      return secY + 36;
+    };
 
-    ctx.save();
+    // --- 1. PENGALAMAN KERJA ---
+    let y = drawSectionHdr(275, 'PENGALAMAN KERJA');
+
+    ctx.fillStyle = '#0F172A';
+    ctx.font = '800 16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('PT NeoKrenov — Tambun Selatan, Bekasi Utara', 54, y);
+
+    ctx.fillStyle = '#64748B';
+    ctx.font = '700 13.5px "Space Grotesk", sans-serif';
+    ctx.fillText('Jul 2022 – Oct 2022', canvas.width - 200, y);
+    y += 24;
+
     ctx.fillStyle = '#D11A2A';
-    ctx.beginPath();
-    for (let i = 0; i < points * 2; i++) {
-      const radius = (i % 2 === 0) ? outerRadius : innerRadius;
-      const angle = (i * Math.PI) / points;
-      const x = starCenterX + Math.cos(angle) * radius;
-      const y = starCenterY + Math.sin(angle) * radius;
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    }
-    ctx.closePath();
-    ctx.fill();
+    ctx.font = '700 14.5px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Digital Marketing Internship', 54, y);
+    y += 22;
 
-    // Badge Text inside starburst
-    ctx.fillStyle = '#FFFFFF';
-    ctx.font = '900 10.5px "Space Grotesk", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText('OFFICIAL', starCenterX, starCenterY - 10);
-    ctx.font = '900 11.5px "Space Grotesk", sans-serif';
-    ctx.fillText('PORTFOLIO', starCenterX, starCenterY + 4);
-    ctx.font = '800 10px "Space Grotesk", sans-serif';
-    ctx.fillText('2026', starCenterX, starCenterY + 18);
-    ctx.restore();
+    const workPts = [
+      'Merancang dan membuat konten digital untuk kebutuhan media sosial perusahaan',
+      'Melakukan optimisasi SEO untuk meningkatkan visibilitas di mesin pencari',
+      'Bekerja sama dengan tim dalam merencanakan strategi konten harian dan optimasi konversi penjualan'
+    ];
+    ctx.fillStyle = '#334155';
+    ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
+    workPts.forEach(pt => {
+      drawBullet(54, y);
+      ctx.fillText(pt, 70, y);
+      y += 22;
+    });
+    y += 18;
 
-    // Bottom Footer Doc Details
-    ctx.fillStyle = '#94A3B8';
-    ctx.font = '600 12px "Space Grotesk", sans-serif';
-    ctx.fillText('DOC-ID: PRIMA-YUDHISTIRA-CV-2026-VERIFIED', 64, canvas.height - 110);
-    ctx.fillText('IPB University • SV Rekayasa Perangkat Lunak', 64, canvas.height - 88);
+    // --- 2. PENDIDIKAN ---
+    y = drawSectionHdr(y, 'PENDIDIKAN');
+
+    // IPB University
+    ctx.fillStyle = '#0F172A';
+    ctx.font = '800 16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('IPB University — Bogor, Jawa Barat', 54, y);
+
+    ctx.fillStyle = '#64748B';
+    ctx.font = '700 13.5px "Space Grotesk", sans-serif';
+    ctx.fillText('Jul 2024 – Aug 2028 (Expected)', canvas.width - 270, y);
+    y += 24;
+
+    ctx.fillStyle = '#0F172A';
+    ctx.font = '700 15px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('D4 Teknologi Rekayasa Perangkat Lunak  •  IPK: 3.62 / 4.00', 54, y);
+    y += 22;
+
+    const ipbAwards = [
+      'Juara 2 Short Movie Competition Portal 8 (BEM Sekolah Vokasi IPB University)',
+      'Juara 2 Short Movie Competition IT-CAS (diselenggarakan oleh Amikom Surakarta)'
+    ];
+    ctx.fillStyle = '#334155';
+    ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
+    ipbAwards.forEach(pt => {
+      drawBullet(54, y);
+      ctx.fillText(pt, 70, y);
+      y += 22;
+    });
+    y += 14;
+
+    // SMKN 5 Kota Bekasi
+    ctx.fillStyle = '#0F172A';
+    ctx.font = '800 16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('SMKN 5 Kota Bekasi — Bekasi, Jawa Barat', 54, y);
+
+    ctx.fillStyle = '#64748B';
+    ctx.font = '700 13.5px "Space Grotesk", sans-serif';
+    ctx.fillText('Jun 2021 – Mar 2024', canvas.width - 200, y);
+    y += 24;
+
+    ctx.fillStyle = '#0F172A';
+    ctx.font = '700 15px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Rekayasa Perangkat Lunak  •  Nilai Rata-rata: 86.50 / 100.00', 54, y);
+    y += 22;
+
+    drawBullet(54, y);
+    ctx.fillStyle = '#334155';
+    ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Lulusan Terbaik Program Studi Rekayasa Perangkat Lunak Angkatan 2023/2024', 70, y);
+    y += 36;
+
+    // --- 3. PENGALAMAN ORGANISASI ---
+    y = drawSectionHdr(y, 'PENGALAMAN ORGANISASI');
+
+    ctx.fillStyle = '#0F172A';
+    ctx.font = '800 16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Obscura Photography Club — Bogor, Jawa Barat', 54, y);
+    ctx.fillStyle = '#64748B';
+    ctx.font = '700 13.5px "Space Grotesk", sans-serif';
+    ctx.fillText('Dec 2025 – Dec 2026', canvas.width - 200, y);
+    y += 24;
+
+    drawBullet(54, y);
+    ctx.fillStyle = '#D11A2A';
+    ctx.font = '700 14.5px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Ketua Umum Periode 2025/2026', 70, y);
+    y += 26;
+
+    ctx.fillStyle = '#0F172A';
+    ctx.font = '800 16px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Obscura Photography Club — Bogor, Jawa Barat', 54, y);
+    ctx.fillStyle = '#64748B';
+    ctx.font = '700 13.5px "Space Grotesk", sans-serif';
+    ctx.fillText('Feb 2025 – May 2025', canvas.width - 200, y);
+    y += 24;
+
+    drawBullet(54, y);
+    ctx.fillStyle = '#334155';
+    ctx.font = '500 14px "Plus Jakarta Sans", sans-serif';
+    ctx.fillText('Wakil Ketua Pelaksana Hunting Akbar 2025', 70, y);
+    y += 36;
+
+    // --- 4. PROYEK ---
+    y = drawSectionHdr(y, 'PROYEK UNGGULAN');
+
+    const projs = [
+      { name: 'Beabot', desc: 'Platform AI Latihan Wawancara & Review Esai Beasiswa', stack: 'Next.js, PostgreSQL, Express.js, Bootstrap' },
+      { name: 'Website Reservasi Luwihaja Hill (2025)', desc: 'Sistem Reservasi & Review Kamar Pelanggan', stack: 'Laravel, PostgreSQL, Bootstrap CSS' },
+      { name: 'Wertugo Mobile (2026)', desc: 'Aplikasi Rekomendasi Spot Wisata di Sekitar Anda', stack: 'Laravel, MongoDB, Java, Bootstrap' },
+      { name: 'MediGO (2026)', desc: 'Portal Informasi Fasilitas Kesehatan Se-Jabodetabek', stack: 'Laravel, MySQL, Leaflet JS, Python' },
+      { name: 'DARKIM (2026)', desc: 'Analisis Kemasan Makanan/Minuman Pasien Diabetes', stack: 'Python, Next.js, TailwindCSS' }
+    ];
+
+    projs.forEach(p => {
+      drawBullet(54, y);
+      ctx.fillStyle = '#0F172A';
+      ctx.font = '800 14.5px "Plus Jakarta Sans", sans-serif';
+      ctx.fillText(`${p.name} — ${p.desc}`, 70, y);
+
+      ctx.fillStyle = '#64748B';
+      ctx.font = '600 12.5px "Space Grotesk", monospace, sans-serif';
+      ctx.fillText(`Stack: [ ${p.stack} ]`, 70, y + 19);
+      y += 40;
+    });
+
+    // --- FOOTER: BARCODE & OFFICIAL PIXEL SEAL ---
+    const barY = canvas.height - 95;
+    ctx.fillStyle = '#64748B';
+    ctx.font = '700 12px "Space Grotesk", monospace, sans-serif';
+    ctx.fillText('DOC-ID: MUHAMMAD-PRIMA-YUDHISTIRA-RESUME-2026', 54, barY - 14);
+
+    // 1D Barcode Pattern
+    const barWidths = [3, 2, 5, 2, 4, 3, 2, 4, 2, 5, 3, 2, 4, 5, 2, 3, 2, 4, 3, 5, 2, 4, 2, 3, 5, 2, 4, 3, 2, 5, 3, 2, 4];
+    let bx = 54;
+    barWidths.forEach((bw, i) => {
+      ctx.fillStyle = '#0F172A';
+      ctx.fillRect(bx, barY, bw, 26);
+      bx += bw + (i % 3 === 0 ? 4 : 2);
+    });
+
+    // Pixel Stamp Seal on bottom right
+    const stampX = canvas.width - 310;
+    const stampY = canvas.height - 105;
+    ctx.strokeStyle = '#D11A2A';
+    ctx.lineWidth = 2.5;
+    ctx.strokeRect(stampX, stampY, 255, 56);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(stampX + 4, stampY + 4, 247, 48);
+
+    ctx.fillStyle = '#D11A2A';
+    ctx.font = '900 13px "Space Grotesk", sans-serif';
+    ctx.fillText('[★] VERIFIED RESUME', stampX + 22, stampY + 24);
+    ctx.font = '700 11.5px "Space Grotesk", sans-serif';
+    ctx.fillText('IPB UNIVERSITY • 2026', stampX + 22, stampY + 42);
 
     const texture = new THREE.CanvasTexture(canvas);
     texture.anisotropy = 16;
@@ -393,7 +476,7 @@ export class PrinterComponent {
     this.dispenserGroup.add(frontPlate);
     this.interactiveObjects.push(frontPlate);
 
-    // Left Delicate Lily Flower Emblem (Replaces red asterisk with Stargazer Lily)
+    // 1. Left Delicate Lily Flower Sticker (Tilted slightly left)
     const lilyTexture = new THREE.TextureLoader().load('assets/printer/lily.png', () => {
       if (this.renderer && this.scene && this.camera) {
         this.renderer.render(this.scene, this.camera);
@@ -407,9 +490,31 @@ export class PrinterComponent {
       alphaTest: 0.05
     });
     const lilyMesh = new THREE.Mesh(lilyGeo, lilyMat);
-    lilyMesh.position.set(-1.26, 0.012, 0.255);
+    lilyMesh.position.set(-1.18, 0.015, 0.254);
+    lilyMesh.rotation.z = -0.08; // Casual ~ -4.5 deg tilt
     this.dispenserGroup.add(lilyMesh);
     this.interactiveObjects.push(lilyMesh);
+
+    // 2. Pixelated Lavender Flower Sticker (Right next to Lily, snug organic cluster)
+    const lavenderTexture = new THREE.TextureLoader().load('assets/printer/lavender_sticker.png', () => {
+      if (this.renderer && this.scene && this.camera) {
+        this.renderer.render(this.scene, this.camera);
+      }
+    });
+    lavenderTexture.colorSpace = THREE.SRGBColorSpace;
+    lavenderTexture.magFilter = THREE.NearestFilter;
+    lavenderTexture.minFilter = THREE.NearestFilter;
+    const lavenderGeo = new THREE.PlaneGeometry(0.22, 0.35);
+    const lavenderMat = new THREE.MeshBasicMaterial({
+      map: lavenderTexture,
+      transparent: true,
+      alphaTest: 0.05
+    });
+    const lavenderMesh = new THREE.Mesh(lavenderGeo, lavenderMat);
+    lavenderMesh.position.set(-0.89, 0.02, 0.256);
+    lavenderMesh.rotation.z = 0.12; // Casual ~ +7 deg tilt
+    this.dispenserGroup.add(lavenderMesh);
+    this.interactiveObjects.push(lavenderMesh);
 
     // Right Status LED Dot (red in standby, bright green when printing)
     const ledGeo = new THREE.CircleGeometry(0.055, 24);
@@ -484,7 +589,9 @@ export class PrinterComponent {
       map: cvTexture,
       roughness: 0.45,
       metalness: 0.02,
-      side: THREE.DoubleSide
+      side: THREE.DoubleSide,
+      clippingPlanes: [this.clipPlane],
+      clipShadows: true
     });
 
     this.paperMesh = new THREE.Mesh(paperGeo, paperMat);
@@ -510,7 +617,8 @@ export class PrinterComponent {
       map: paperShadowTex,
       transparent: true,
       opacity: 0.85,
-      depthWrite: false
+      depthWrite: false,
+      clippingPlanes: [this.clipPlane]
     });
     this.shadowMesh = new THREE.Mesh(paperShadowGeo, paperShadowMat);
     this.shadowMesh.position.set(0.04, this.paperStartY - 0.06, -0.16);
@@ -608,6 +716,7 @@ export class PrinterComponent {
 
     this.updateStatusText('Klik printer untuk mencetak CV', 'standby');
     this.resize();
+    requestAnimationFrame(() => this.resize());
   }
 
   hide() {
@@ -670,25 +779,27 @@ export class PrinterComponent {
     // Trigger Download of /CV_Portofolio.pdf
     this.downloadCVFile();
 
-    // After 2.0 seconds, notify parent to restore lanyard smoothly
+    // After 1.5 seconds, notify parent to restore lanyard smoothly
     setTimeout(() => {
       if (typeof this.onPrintComplete === 'function') {
         this.onPrintComplete();
       }
-    }, 2000);
+    }, 1500);
   }
 
   downloadCVFile() {
     try {
+      const fileName = 'Muhammad Prima Yudhistira-resume.pdf';
+      const fileUrl = '/' + encodeURIComponent(fileName);
       const link = document.createElement('a');
-      link.href = '/CV_Portofolio.pdf';
-      link.download = 'CV_Muhammad_Prima_Yudhistira.pdf';
+      link.href = fileUrl;
+      link.download = fileName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     } catch (err) {
       console.error('Download error:', err);
-      window.open('/CV_Portofolio.pdf', '_blank');
+      window.open('/' + encodeURIComponent('Muhammad Prima Yudhistira-resume.pdf'), '_blank');
     }
   }
 
@@ -774,6 +885,10 @@ export class PrinterComponent {
     } else {
       // Gentle floating breath
       this.mainGroup.position.y = this.baseGroupY + Math.sin(time * 1.6) * 0.015;
+    }
+
+    if (this.clipPlane) {
+      this.clipPlane.constant = 1.22 + this.mainGroup.position.y;
     }
 
     this.renderer.render(this.scene, this.camera);

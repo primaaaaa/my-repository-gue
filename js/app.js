@@ -56,9 +56,94 @@ class App {
     this.initVisibilityObservers();
     this.initGlobalEventListeners();
     this.initZoomProtection();
+    this.initPreloader();
 
     this.animate = this.animate.bind(this);
     requestAnimationFrame(this.animate);
+  }
+
+  // ========================================================
+  // INITIAL PRELOADER & ASSET WARMUP (Smooth Mobile Access)
+  // ========================================================
+  async initPreloader() {
+    const preloader = document.getElementById('appPreloader');
+    if (!preloader) return;
+
+    // Safety fallback: guaranteed dismissal after 2.5s
+    const safetyTimeout = setTimeout(() => {
+      this.dismissPreloader(preloader);
+    }, 2500);
+
+    // Lock scrolling while preloading
+    document.body.style.overflow = 'hidden';
+
+    // 1. Wait for Fonts
+    try {
+      if (document.fonts && document.fonts.ready) {
+        await document.fonts.ready;
+      }
+    } catch (e) {}
+
+    // 2. Preload Critical 3D Textures & Project Logos
+    const criticalImages = [
+      'assets/projects/purple_app_raw.png',
+      'assets/projects/purple_app_pixel.png',
+      'assets/projects/villa_air_raw.png',
+      'assets/projects/villa_air_pixel.png',
+      'assets/projects/wertugo_raw.png',
+      'assets/projects/wertugo_pixel.png',
+      'assets/projects/medigo_raw.png',
+      'assets/projects/darkim_raw.png',
+      'assets/printer/lily.png',
+      'assets/printer/lavender_sticker.png'
+    ];
+
+    const preloadPromise = Promise.all(
+      criticalImages.map(src => new Promise(resolve => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+        img.src = src;
+      }))
+    );
+
+    // 3. GPU Shader Warmup to eliminate mobile scroll stutter
+    requestAnimationFrame(() => {
+      try {
+        if (this.heroComponent?.renderer && this.heroComponent?.scene && this.heroComponent?.camera) {
+          this.heroComponent.renderer.compile(this.heroComponent.scene, this.heroComponent.camera);
+          this.heroComponent.render(0.016, 0.1, this.mouseNDC, this.raycaster, true);
+        }
+        if (this.aboutComponent?.renderer && this.aboutComponent?.scene && this.aboutComponent?.camera) {
+          this.aboutComponent.renderer.compile(this.aboutComponent.scene, this.aboutComponent.camera);
+        }
+        if (this.eduComponent?.renderer && this.eduComponent?.scene && this.eduComponent?.camera) {
+          this.eduComponent.renderer.compile(this.eduComponent.scene, this.eduComponent.camera);
+        }
+        if (this.projectsComponent?.renderer && this.projectsComponent?.scene && this.projectsComponent?.camera) {
+          this.projectsComponent.renderer.compile(this.projectsComponent.scene, this.projectsComponent.camera);
+        }
+      } catch (err) {
+        console.warn('Warmup notice:', err);
+      }
+    });
+
+    await preloadPromise;
+
+    // Brief smooth pause for the voxel cube animation
+    await new Promise(r => setTimeout(r, 450));
+    clearTimeout(safetyTimeout);
+    this.dismissPreloader(preloader);
+  }
+
+  dismissPreloader(preloader) {
+    document.body.style.overflow = '';
+    if (preloader && !preloader.classList.contains('is-loaded')) {
+      preloader.classList.add('is-loaded');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500);
+    }
   }
 
   // ========================================================

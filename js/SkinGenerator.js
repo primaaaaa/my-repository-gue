@@ -32,11 +32,11 @@ export class SkinGenerator {
       },
       ipb: {
         blazer: {
-          base: '#262f53',
-          highlight: '#384576',
-          shadow: '#1c233e',
-          crease: '#13182b',
-          lapelEdge: '#3f4e85',
+          base: '#18203b',
+          highlight: '#243056',
+          shadow: '#10162a',
+          crease: '#0b0e1b',
+          lapelEdge: '#2a3867',
           button: '#f59e0b',
           buttonBorder: '#b45309',
           emblemWhite: '#ffffff',
@@ -44,9 +44,9 @@ export class SkinGenerator {
           emblemBlue: '#1d4ed8'
         },
         shirt: {
-          base: '#486b92',
+          base: '#3a5779',
           collar: '#ffffff',
-          shadow: '#365272'
+          shadow: '#2a4059'
         },
         pants: {
           base: '#202127',

@@ -146,11 +146,10 @@ export class ContactComponent {
   initPrinter() {
     // 3D Voxel Printer Component
     this.printerComponent = new PrinterComponent({
+      isMobileDevice: this.isMobileDevice,
       onPrintComplete: () => {
         // After CV print is finished and file downloaded, restore lanyard
-        setTimeout(() => {
-          this.restoreLanyard();
-        }, 1600);
+        this.restoreLanyard();
       },
       onDismiss: () => {
         this.restoreLanyard();
@@ -181,7 +180,11 @@ export class ContactComponent {
     this.isPrinterOpen = true;
 
     const contactSec = document.getElementById('contact');
-    if (contactSec) contactSec.classList.add('is-printer-active');
+    if (contactSec) {
+      contactSec.classList.add('is-printer-active');
+      // Smoothly scroll to the top of the contact section so the 3D printer is in full view
+      contactSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
     const rig = document.getElementById('lanyardRig');
     const printerStage = document.getElementById('printerStage');
@@ -192,8 +195,11 @@ export class ContactComponent {
       rig.classList.add('is-retracting');
     }
 
-    // 2. Transition in the 3D printer stage
+    // 2. Transition in the 3D printer stage and collapse lanyard rig from document layout
     setTimeout(() => {
+      if (rig) {
+        rig.style.display = 'none';
+      }
       if (printerStage) {
         printerStage.style.display = 'flex';
         printerStage.setAttribute('aria-hidden', 'false');
@@ -225,7 +231,7 @@ export class ContactComponent {
       this.printerComponent.hide();
     }
 
-    // 2. Retract printer and drop lanyard back in
+    // 2. Restore lanyard rig to layout, retract printer, and drop lanyard back in
     setTimeout(() => {
       if (printerStage) {
         printerStage.style.display = 'none';
@@ -233,6 +239,7 @@ export class ContactComponent {
       }
 
       if (rig) {
+        rig.style.display = '';
         rig.classList.remove('is-retracting');
         this.triggerDropAndSway();
       }
