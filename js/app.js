@@ -104,10 +104,7 @@ class App {
     if (contactEl && 'IntersectionObserver' in window) {
       const contactObserver = new IntersectionObserver((entries) => {
         this.isContactVisible = entries[0].isIntersecting;
-        if (entries[0].isIntersecting && this.contactComponent) {
-          this.contactComponent.triggerPlaceCard();
-        }
-      }, { threshold: 0.2, rootMargin: '100px 0px' });
+      }, { rootMargin: '120px 0px' });
       contactObserver.observe(contactEl);
     }
   }

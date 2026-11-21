@@ -26,15 +26,15 @@ export class EducationComponent {
         schoolName: 'IPB University',
         major: 'D4 Teknologi Rekayasa Perangkat Lunak',
         period: '2024 — 2028 (Aktif)',
-        summary: 'Fokus mendalam pada rekayasa perangkat lunak modern, arsitektur aplikasi web terdistribusi, visual 3D interaktif, dan kepemimpinan kreatif.',
+        summary: 'Fokus mendalam pada rekayasa perangkat lunak modern, arsitektur aplikasi web, pemrograman mobile, machine learning dan computer visual, serta manajemen proyek teknologi informasi.',
         location: 'Bogor, Jawa Barat',
         costumeLabel: 'Kostum: Jas Almamater IPB',
         achieveTitle: 'Pengalaman & Organisasi',
         achievements: [
-          { title: 'Ketua Umum Obscura Photography Club', sub: 'Periode 2025/2026 • Kepemimpinan & Manajemen Organisasi' },
-          { title: 'Wakil Ketua Pelaksana Hunting Akbar 2025', sub: 'Diselenggarakan oleh Obscura Photography Club' },
-          { title: 'Juara 2 Short Movie Competition di Portal 8', sub: 'BEM Sekolah Vokasi IPB University' },
-          { title: 'Juara 2 Short Movie Competition di IT-CAS', sub: 'Amikom Surakarta • Tingkat Nasional' }
+          { title: 'Ketua Umum Obscura Photography Club', sub: 'Periode 2025/2026' },
+          { title: 'Wakil Ketua Pelaksana Hunting Akbar 2025', sub: 'Obscura Photography Club' },
+          { title: 'Juara 2 Short Movie Competition di Portal 8', sub: 'Diselenggarakan oleh BEM Sekolah Vokasi IPB University' },
+          { title: 'Juara 2 Short Movie Competition di IT-CAS', sub: 'Diselenggarakan oleh bolAmikom Surakarta' }
         ]
       },
       {
@@ -49,7 +49,7 @@ export class EducationComponent {
         achieveTitle: 'Prestasi & Pengalaman',
         achievements: [
           { title: 'Lulusan Terbaik Program Studi Rekayasa Perangkat Lunak', sub: 'Angkatan 2023/2024 • Prestasi Akademik Tertinggi' },
-          { title: 'Divisi Humas Pentas Seni Algorithm of Creativity', sub: 'Humas, Komunikasi & Publikasi Acara Kreatif' }
+          { title: 'Divisi Humas Pentas Seni Algorithm of Creativity', sub: 'Humas, Komunikasi & Publikasi Acara Pentas Seni' }
         ]
       }
     ];

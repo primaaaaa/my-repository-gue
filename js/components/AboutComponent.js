@@ -112,15 +112,6 @@ export class AboutComponent {
         }
       });
     }
-
-    // Reset entrance animation when user scrolls back to the very top
-    window.addEventListener('scroll', () => {
-      if (window.scrollY < 120) {
-        this.entranceTriggered = false;
-        this.entranceProgress = 0;
-        this.isEntrancePlaying = false;
-      }
-    }, { passive: true });
   }
 
   triggerEntrance() {

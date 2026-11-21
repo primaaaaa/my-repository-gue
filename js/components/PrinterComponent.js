@@ -44,6 +44,7 @@ export class PrinterComponent {
     this.isActive = false;
     this.isPrinting = false;
     this.isPrinted = false;
+    this.isLocked = false;
     this.printStartTime = 0;
     this.printDuration = 2000; // 2 seconds
     this.printProgress = 0;
@@ -70,8 +71,8 @@ export class PrinterComponent {
     // 2. Camera (POV from above / top-down perspective, looking slightly down at dispenser & paper)
     const width = this.container ? this.container.clientWidth : 480;
     const height = this.container ? this.container.clientHeight : 440;
-    this.camera = new THREE.PerspectiveCamera(35, width / height, 0.1, 50);
-    this.camera.position.set(0, 0.45, 5.2);
+    this.camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 50);
+    this.camera.position.set(0, 0.65, 5.8);
     this.camera.lookAt(0, 0.35, 0);
 
     // 3. Renderer
@@ -253,33 +254,16 @@ export class PrinterComponent {
     ctx.stroke();
     expY += 45;
 
-    // --- TECH STACK BADGES ---
+    // --- CORE TECHNOLOGIES (Clean Editorial Typography, No Filler Badges) ---
     ctx.fillStyle = '#0F172A';
     ctx.font = '900 20px "Space Grotesk", sans-serif';
-    ctx.fillText('Core Technologies', 64, expY);
+    ctx.fillText('Core Technologies & Frameworks', 64, expY);
     expY += 28;
 
-    const techPills = ['React', 'Next.js', 'Laravel', 'Tailwind CSS', 'Python', 'Three.js', 'MySQL', 'MongoDB', 'Git', 'Agile'];
-    let pillX = 64;
-    techPills.forEach(tech => {
-      ctx.font = '700 12.5px "Space Grotesk", sans-serif';
-      const tw = ctx.measureText(tech).width;
-      ctx.fillStyle = '#F8FAFC';
-      ctx.strokeStyle = '#CBD5E1';
-      ctx.lineWidth = 1.5;
-      ctx.beginPath();
-      ctx.roundRect(pillX, expY - 16, tw + 20, 24, 6);
-      ctx.fill();
-      ctx.stroke();
-
-      ctx.fillStyle = '#0F172A';
-      ctx.fillText(tech, pillX + 10, expY);
-      pillX += tw + 30;
-      if (pillX > canvas.width - 240) {
-        pillX = 64;
-        expY += 34;
-      }
-    });
+    ctx.fillStyle = '#334155';
+    ctx.font = '600 14px "Space Grotesk", sans-serif';
+    ctx.fillText('React  •  Next.js  •  Laravel  •  Tailwind CSS  •  Python  •  Three.js  •  MySQL  •  MongoDB  •  Git  •  Agile', 64, expY);
+    expY += 34;
 
     // --- OFFICIAL RED STARBURST BADGE (Bottom Right, matching reference image!) ---
     const starCenterX = canvas.width - 145;
@@ -409,16 +393,23 @@ export class PrinterComponent {
     this.dispenserGroup.add(frontPlate);
     this.interactiveObjects.push(frontPlate);
 
-    // Left Red Asterisk Icon (matching reference image)
-    const asteriskGroup = new THREE.Group();
-    asteriskGroup.position.set(-1.26, 0.01, 0.255);
-    for (let a = 0; a < 3; a++) {
-      const armGeo = new THREE.BoxGeometry(0.24, 0.07, 0.02);
-      const arm = new THREE.Mesh(armGeo, crimsonMat);
-      arm.rotation.z = (a * Math.PI) / 3;
-      asteriskGroup.add(arm);
-    }
-    this.dispenserGroup.add(asteriskGroup);
+    // Left Delicate Lily Flower Emblem (Replaces red asterisk with Stargazer Lily)
+    const lilyTexture = new THREE.TextureLoader().load('assets/printer/lily.png', () => {
+      if (this.renderer && this.scene && this.camera) {
+        this.renderer.render(this.scene, this.camera);
+      }
+    });
+    lilyTexture.colorSpace = THREE.SRGBColorSpace;
+    const lilyGeo = new THREE.PlaneGeometry(0.28, 0.28);
+    const lilyMat = new THREE.MeshBasicMaterial({
+      map: lilyTexture,
+      transparent: true,
+      alphaTest: 0.05
+    });
+    const lilyMesh = new THREE.Mesh(lilyGeo, lilyMat);
+    lilyMesh.position.set(-1.26, 0.012, 0.255);
+    this.dispenserGroup.add(lilyMesh);
+    this.interactiveObjects.push(lilyMesh);
 
     // Right Status LED Dot (red in standby, bright green when printing)
     const ledGeo = new THREE.CircleGeometry(0.055, 24);
@@ -533,7 +524,7 @@ export class PrinterComponent {
     if (!this.canvas) return;
 
     const onPointerMove = (e) => {
-      if (!this.isActive || this.isPrinting) return;
+      if (!this.isActive || this.isPrinting || this.isLocked) return;
       const rect = this.canvas.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
@@ -542,7 +533,7 @@ export class PrinterComponent {
     };
 
     const onClick = (e) => {
-      if (!this.isActive || this.isPrinting) return;
+      if (!this.isActive || this.isPrinting || this.isPrinted || this.isLocked) return;
       const rect = this.canvas.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
       const y = (e.clientY - rect.top) / rect.height;
@@ -567,13 +558,31 @@ export class PrinterComponent {
     this.canvas.addEventListener('touchend', (e) => {
       if (e.changedTouches.length > 0) onClick(e.changedTouches[0]);
     });
+
+    const tooltipEl = document.getElementById('printerTooltip');
+    if (tooltipEl) {
+      tooltipEl.addEventListener('click', () => {
+        if (!this.isActive || this.isPrinting || this.isPrinted || this.isLocked) return;
+        this.triggerPrintSequence();
+      });
+    }
   }
 
   show() {
     this.isActive = true;
     this.isPrinting = false;
     this.isPrinted = false;
+    this.isLocked = false;
     this.printProgress = 0;
+
+    if (this.canvas) {
+      this.canvas.style.pointerEvents = 'auto';
+      this.canvas.style.cursor = 'default';
+    }
+    const tooltipEl = document.getElementById('printerTooltip');
+    if (tooltipEl) {
+      tooltipEl.style.pointerEvents = 'auto';
+    }
 
     // Reset paper to top tucked position
     if (this.paperMesh) {
@@ -606,11 +615,26 @@ export class PrinterComponent {
   }
 
   triggerPrintSequence() {
-    if (this.isPrinting) return;
+    if (this.isPrinting || this.isPrinted || this.isLocked) return;
 
     this.isPrinting = true;
+    this.isLocked = true;
     this.printStartTime = performance.now();
     this.printProgress = 0;
+
+    // Immediately disable pointer events to prevent re-triggering
+    if (this.canvas) {
+      this.canvas.style.pointerEvents = 'none';
+      this.canvas.style.cursor = 'default';
+    }
+    const tooltipEl = document.getElementById('printerTooltip');
+    if (tooltipEl) {
+      tooltipEl.style.pointerEvents = 'none';
+    }
+    this.isHovered = false;
+    if (this.dispenserGroup) {
+      this.dispenserGroup.scale.set(1, 1, 1);
+    }
 
     // 1. Switch LED & Laser Slit Light to Glowing Neon Green
     if (this.ledMaterial) {
@@ -631,6 +655,7 @@ export class PrinterComponent {
   completePrintSequence() {
     this.isPrinting = false;
     this.isPrinted = true;
+    // this.isLocked remains true so animation cannot be restarted
 
     // Steady green
     if (this.ledMaterial) {
@@ -684,12 +709,12 @@ export class PrinterComponent {
     const h = this.container.clientHeight || 440;
 
     this.camera.aspect = w / h;
-    // Adapt FOV slightly on narrower screens so paper is never cut off
-    if (w < 440) {
-      this.camera.fov = 42;
-    } else {
-      this.camera.fov = 35;
-    }
+    // Calculate required FOV so printer capsule (width ~3.5 units) has at least 25% horizontal margin on any screen
+    const dist = this.camera.position.z || 5.8;
+    const targetWidth = 4.8;
+    const reqTan = targetWidth / (2 * dist * this.camera.aspect);
+    const calculatedFov = 2 * Math.atan(reqTan) * (180 / Math.PI);
+    this.camera.fov = Math.max(38, Math.min(56, calculatedFov));
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(w, h, false);
   }
@@ -698,7 +723,7 @@ export class PrinterComponent {
     if (!this.isActive || !this.renderer || !this.scene || !this.camera) return;
 
     // Raycast hover check
-    if (!this.isPrinting && this.mouse.x !== -999) {
+    if (!this.isPrinting && !this.isLocked && this.mouse.x !== -999) {
       this.raycaster.setFromCamera(this.mouse, this.camera);
       const intersects = this.raycaster.intersectObjects(this.interactiveObjects, true);
       const hovering = intersects.length > 0;

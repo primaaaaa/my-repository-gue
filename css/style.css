@@ -4216,6 +4216,13 @@ body {
   text-align: left;
   gap: 4px;
   z-index: 4;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.contact-section.is-printer-active .contact-compact-header {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-8px);
 }
 
 .contact-kicker {
@@ -4279,11 +4286,19 @@ body {
   margin-top: 0;
   gap: 16px;
   transform-origin: top center;
+  transform: translateY(-130%);
+  opacity: 0;
+  will-change: transform, opacity;
 }
 
 /* Transisi menyembul dari atas (dari balik section putih) */
 .lanyard-rig.is-dropping-in {
   animation: lanyardDropInFromTop 1.35s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+}
+
+.lanyard-rig.is-dropped {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 /* Transisi ditarik ke atas saat printer 3D aktif */
@@ -4435,13 +4450,8 @@ body {
   flex-direction: column;
   align-items: center;
   transform-origin: 50% 0; /* Anchor di titik paling atas tempat tali menggantung */
-  animation: lanyardPendulumSway 6s ease-in-out infinite alternate;
+  animation: lanyardPendulumSway 5.5s ease-in-out infinite alternate;
   cursor: pointer;
-}
-
-.lanyard-pendulum:hover,
-.lanyard-pendulum.is-hover-goyang {
-  animation: lanyardPendulumHoverGoyang 2.2s ease-in-out infinite alternate !important;
 }
 
 .lanyard-pendulum.is-swinging {
@@ -4459,20 +4469,6 @@ body {
 
   100% {
     transform: rotate(-2.4deg);
-  }
-}
-
-@keyframes lanyardPendulumHoverGoyang {
-  0% {
-    transform: rotate(-5deg);
-  }
-
-  50% {
-    transform: rotate(4.4deg);
-  }
-
-  100% {
-    transform: rotate(-5deg);
   }
 }
 
@@ -4852,7 +4848,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 24px;
+  margin-top: clamp(40px, 6vh, 60px);
+  margin-bottom: clamp(32px, 5vh, 48px);
   position: relative;
   z-index: 8;
 }
@@ -4902,20 +4899,20 @@ body {
 }
 
 /* ========================================================
-   3D VOXEL PRINTER STAGE & INTERACTION
+   3D PRINTER STAGE & INTERACTION
    ======================================================== */
 .printer-stage {
   position: absolute;
-  top: 0;
+  top: clamp(32px, 5vh, 56px);
   left: 50%;
   transform: translateX(-50%) translateY(-24px);
   width: 100%;
   max-width: 620px;
-  min-height: 440px;
+  min-height: 480px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   z-index: 20;
   opacity: 0;
   pointer-events: none;
@@ -4932,8 +4929,9 @@ body {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 16px 12px;
+  justify-content: flex-start;
+  padding: 8px 16px 20px;
+  margin-bottom: 8px;
   z-index: 4;
 }
 
@@ -4941,13 +4939,13 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 7px 15px;
+  padding: 9px 18px;
   background: rgba(255, 255, 255, 0.16);
   border: 1.5px solid rgba(255, 255, 255, 0.45);
   border-radius: 999px;
   color: #ffffff;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 12.5px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -4962,29 +4960,15 @@ body {
   transform: translateX(-3px);
 }
 
-.printer-live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 13px;
-  background: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
-  color: rgba(255, 255, 255, 0.95);
-  font-family: var(--font-display);
-  font-size: 10.5px;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-}
-
 .printer-canvas-wrapper {
   position: relative;
   width: 100%;
-  max-width: 520px;
+  max-width: 580px;
   height: 480px;
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
 .printer-canvas {
@@ -4995,7 +4979,7 @@ body {
 }
 
 .printer-tooltip {
-  margin-top: 10px;
+  margin-top: clamp(16px, 3.5vh, 28px);
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -5011,6 +4995,14 @@ body {
   letter-spacing: 0.04em;
   animation: printerPulseBreath 2.2s ease-in-out infinite;
   user-select: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.printer-tooltip:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0 0 #111113;
 }
 
 .printer-status-dot {
@@ -5155,6 +5147,11 @@ body {
 
   .card-contact-channels .pill-email {
     grid-column: 1 / -1;
+  }
+
+  .lanyard-actions-bar {
+    margin-top: clamp(28px, 5vh, 40px);
+    margin-bottom: clamp(24px, 4vh, 36px);
   }
 
   .btn-print-cv {

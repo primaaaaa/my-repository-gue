@@ -49,9 +49,9 @@ export class ProjectsComponent {
         liveUrl: null,
         repoUrl: '#',
         photos: [
-          { title: 'Pemindai Barcode Kemasan', tag: 'Barcode Scanner', color: '#005f3b' },
-          { title: 'Laporan Analisis Risiko Nutrisi', tag: 'Risk Assessment', color: '#00874e' },
-          { title: 'Rekomendasi Makanan Sehat', tag: 'Healthy Alternative', color: '#00aa64' }
+          { title: 'Tampilan Utama Pemindai & Analisis', image: 'assets/project-ui/darkim/darkim-app.png', color: '#00d084' },
+          { title: 'Pemindai Kamera & Input Kemasan Produk', image: 'assets/project-ui/darkim/darkim-scanner.png', color: '#00874e' },
+          { title: 'Laporan Analisis Risiko & Tabel Zat Gizi', image: 'assets/project-ui/darkim/darkim-analisis.png', color: '#00aa64' }
         ],
         techStack: ['nextjs', 'tailwind', 'sql', 'python'],
         otherTech: ['FastAPI', 'OpenFoodFacts API'],
@@ -117,9 +117,11 @@ export class ProjectsComponent {
         liveUrl: null,
         repoUrl: '#',
         photos: [
-          { title: 'Antarmuka Percakapan Voice AI', tag: 'Voice Console', color: '#581c87' },
-          { title: 'Transkripsi Percakapan Real-Time', tag: 'Live Transcript', color: '#6b21a8' },
-          { title: 'Panel Konfigurasi Agen AI', tag: 'Agent Setup', color: '#7e22ce' }
+          { title: 'Landing Page Beabot', image: 'assets/project-ui/beabot/landing-page.png', color: '#581c87' },
+          { title: 'Dashboard Simulasi Wawancara', image: 'assets/project-ui/beabot/Beabot-dashboard.png', color: '#6b21a8' },
+          { title: 'Ruang Wawancara AI Voice Real-Time', image: 'assets/project-ui/beabot/interview-room.png', color: '#7e22ce' },
+          { title: 'Formulir Konfigurasi Simulasi Interview', image: 'assets/project-ui/beabot/Form Interview.png', color: '#6b21a8' },
+          { title: 'Fitur & Layanan (Halaman About Us)', image: 'assets/project-ui/beabot/Beabot-about us.png', color: '#581c87' }
         ],
         techStack: ['nextjs', 'bootstrap', 'sql'],
         otherTech: ['Express JS', 'Gemini API key', 'VAPI AI Voice Agent'],
@@ -180,9 +182,10 @@ export class ProjectsComponent {
         liveUrl: null,
         repoUrl: '#',
         photos: [
-          { title: 'Eksplorasi Spot Wisata', tag: 'Discovery UI', color: '#14532d' },
-          { title: 'Peta & Rute Interaktif', tag: 'Map Route', color: '#c2410c' },
-          { title: 'Detail Tempat & Fasilitas', tag: 'Spot Detail', color: '#15803d' }
+          { title: 'Beranda Eksplorasi Wisata', image: 'assets/project-ui/wertugo/Beranda (2).png', color: '#14532d' },
+          { title: 'Halaman Utama Pengguna (Home)', image: 'assets/project-ui/wertugo/Home (User).png', color: '#c2410c' },
+          { title: 'Pencarian Destinasi (Place Seeking)', image: 'assets/project-ui/wertugo/Place Seeking (User).png', color: '#15803d' },
+          { title: 'Halaman Pendaftaran Akun', image: 'assets/project-ui/wertugo/Register.png', color: '#16a34a' }
         ],
         techStack: ['laravel', 'mongodb', 'bootstrap'],
         otherTech: ['Java'],
