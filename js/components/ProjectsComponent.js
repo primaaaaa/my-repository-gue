@@ -558,10 +558,14 @@ export class ProjectsComponent {
 
     const modal = document.getElementById('projPhotoModal');
     if (modal) {
+      if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+      }
       modal.style.display = 'flex';
       modal.setAttribute('aria-hidden', 'false');
     }
     document.body.style.overflow = 'hidden';
+    document.body.classList.add('has-photo-modal-open');
 
     this.renderModalPhoto();
   }
@@ -572,13 +576,21 @@ export class ProjectsComponent {
     if (modal) {
       modal.style.display = 'none';
       modal.setAttribute('aria-hidden', 'true');
+      const container = modal.querySelector('.proj-modal-container');
+      if (container) {
+        container.style.transform = '';
+        container.style.opacity = '';
+      }
     }
     const slide = document.getElementById('projModalSlide');
     if (slide) {
       slide.style.transform = '';
       slide.style.opacity = '';
+      slide.scrollTop = 0;
+      slide.scrollLeft = 0;
     }
     document.body.style.overflow = '';
+    document.body.classList.remove('has-photo-modal-open');
   }
 
   nextPhoto() {
@@ -622,26 +634,36 @@ export class ProjectsComponent {
       }
 
       if (photo.image || photo.src) {
-        slideEl.innerHTML = `<img src="${photo.image || photo.src}" alt="${photo.title}" class="proj-modal-img" />`;
+        slideEl.innerHTML = `
+          <div class="proj-modal-slide-inner" id="projModalSlideInner">
+            <img src="${photo.image || photo.src}" alt="${photo.title}" class="proj-modal-img" loading="eager" />
+          </div>
+        `;
       } else {
         slideEl.innerHTML = `
-          <div class="proj-modal-mockup" style="background: radial-gradient(circle at 30% 30%, ${photo.color || '#3b82f6'}dd, #0a0a0c)">
-            <div class="proj-modal-mockup-icon">
-              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                <polyline points="21 15 16 10 5 21"></polyline>
-              </svg>
+          <div class="proj-modal-slide-inner" id="projModalSlideInner">
+            <div class="proj-modal-mockup" style="background: radial-gradient(circle at 30% 30%, ${photo.color || '#3b82f6'}dd, #0a0a0c)">
+              <div class="proj-modal-mockup-icon">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.95)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+              </div>
+              <span class="proj-modal-mockup-tag">${photo.title}</span>
+              <span class="proj-modal-mockup-hint">Pratinjau Antarmuka & Tangkapan Layar Fitur</span>
             </div>
-            <span class="proj-modal-mockup-tag">${photo.title}</span>
-            <span class="proj-modal-mockup-hint">Pratinjau Antarmuka & Tangkapan Layar Fitur</span>
           </div>
         `;
       }
 
+      // Reset scroll position to top
+      slideEl.scrollTop = 0;
+      slideEl.scrollLeft = 0;
+
       requestAnimationFrame(() => {
         slideEl.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
-        slideEl.style.transform = 'translateX(0)';
+        slideEl.style.transform = 'none';
         slideEl.style.opacity = '1';
       });
     }
@@ -957,88 +979,121 @@ export class ProjectsComponent {
       modalNext.addEventListener('click', () => this.nextPhoto());
     }
 
-    // Touch swipe & Mouse drag on Photo Modal Viewport (Swipe horizontally / Drag down to dismiss)
+    // Modal Header Pull-Down-to-Dismiss (Natural Sheet Gesture)
+    const modalHeader = document.getElementById('projModalHeader');
+    const modalContainer = photoModal ? photoModal.querySelector('.proj-modal-container') : null;
+
+    if (modalHeader && modalContainer) {
+      let headerStartY = 0;
+      let headerDy = 0;
+      let isHeaderDragging = false;
+
+      const onHeaderStart = (clientY) => {
+        if (!this.isPhotoModalOpen) return;
+        isHeaderDragging = true;
+        headerStartY = clientY;
+        headerDy = 0;
+        modalContainer.style.transition = 'none';
+      };
+
+      const onHeaderMove = (clientY) => {
+        if (!isHeaderDragging) return;
+        headerDy = clientY - headerStartY;
+        if (headerDy > 0) {
+          modalContainer.style.transform = `translateY(${headerDy * 0.8}px)`;
+          modalContainer.style.opacity = `${Math.max(0.35, 1 - headerDy / 350)}`;
+        }
+      };
+
+      const onHeaderEnd = () => {
+        if (!isHeaderDragging) return;
+        isHeaderDragging = false;
+        modalContainer.style.transition = 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
+        if (headerDy > 75) {
+          this.closePhotoModal();
+        } else {
+          modalContainer.style.transform = '';
+          modalContainer.style.opacity = '';
+        }
+      };
+
+      modalHeader.addEventListener('touchstart', (e) => {
+        if (e.touches.length > 0) onHeaderStart(e.touches[0].clientY);
+      }, { passive: true });
+
+      modalHeader.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) onHeaderMove(e.touches[0].clientY);
+      }, { passive: true });
+
+      modalHeader.addEventListener('touchend', onHeaderEnd, { passive: true });
+      modalHeader.addEventListener('touchcancel', onHeaderEnd, { passive: true });
+    }
+
+    // Touch Horizontal Swipe for Photo Navigation (allows natural vertical image scroll!)
     const modalViewport = document.getElementById('projModalViewport');
     const modalSlide = document.getElementById('projModalSlide');
 
     if (modalViewport && modalSlide) {
-      let isDragging = false;
+      let isHorizontalSwiping = false;
       let startX = 0;
       let startY = 0;
       let currentDx = 0;
-      let currentDy = 0;
+      let gestureDetermined = false;
 
-      const onStart = (clientX, clientY) => {
-        if (!this.isPhotoModalOpen) return;
-        isDragging = true;
-        startX = clientX;
-        startY = clientY;
-        currentDx = 0;
-        currentDy = 0;
-        modalSlide.style.transition = 'none';
-      };
-
-      const onMove = (clientX, clientY) => {
-        if (!isDragging) return;
-        currentDx = clientX - startX;
-        currentDy = clientY - startY;
-
-        // Downward drag to dismiss
-        if (currentDy > 15 && Math.abs(currentDy) > Math.abs(currentDx)) {
-          modalSlide.style.transform = `translateY(${currentDy * 0.8}px) scale(${Math.max(0.85, 1 - currentDy / 800)})`;
-          modalSlide.style.opacity = `${Math.max(0.35, 1 - currentDy / 350)}`;
-          return;
-        }
-
-        modalSlide.style.transform = `translateX(${currentDx * 0.75}px)`;
-        modalSlide.style.opacity = '1';
-      };
-
-      const onEnd = () => {
-        if (!isDragging) return;
-        isDragging = false;
-        modalSlide.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
-
-        // Downward pull to dismiss
-        if (currentDy > 70 && Math.abs(currentDy) > Math.abs(currentDx)) {
-          this.closePhotoModal();
-          return;
-        }
-
-        if (currentDx < -45) {
-          this.nextPhoto();
-        } else if (currentDx > 45) {
-          this.prevPhoto();
-        } else {
-          modalSlide.style.transform = 'translate(0, 0) scale(1)';
-          modalSlide.style.opacity = '1';
-        }
-      };
-
-      // Touch events (mobile / tablet swipe)
       modalViewport.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) onStart(e.touches[0].clientX, e.touches[0].clientY);
+        if (!this.isPhotoModalOpen || e.touches.length !== 1) return;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+        currentDx = 0;
+        isHorizontalSwiping = false;
+        gestureDetermined = false;
       }, { passive: true });
 
       modalViewport.addEventListener('touchmove', (e) => {
-        if (e.touches.length > 0) onMove(e.touches[0].clientX, e.touches[0].clientY);
+        if (!this.isPhotoModalOpen || e.touches.length !== 1) return;
+        const curX = e.touches[0].clientX;
+        const curY = e.touches[0].clientY;
+        const dx = curX - startX;
+        const dy = curY - startY;
+
+        if (!gestureDetermined) {
+          if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+            gestureDetermined = true;
+            // Only engage horizontal carousel swipe if movement is clearly horizontal
+            if (Math.abs(dx) > Math.abs(dy) * 1.5) {
+              isHorizontalSwiping = true;
+              modalSlide.style.transition = 'none';
+            } else {
+              // Vertical movement: user is scrolling the screenshot! Leave it to native touch scrolling.
+              isHorizontalSwiping = false;
+            }
+          }
+        }
+
+        if (isHorizontalSwiping) {
+          currentDx = dx;
+          modalSlide.style.transform = `translateX(${currentDx * 0.55}px)`;
+        }
       }, { passive: true });
 
-      modalViewport.addEventListener('touchend', () => onEnd(), { passive: true });
-      modalViewport.addEventListener('touchcancel', () => onEnd(), { passive: true });
+      const onSwipeEnd = () => {
+        if (isHorizontalSwiping) {
+          isHorizontalSwiping = false;
+          modalSlide.style.transition = 'transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease';
 
-      // Mouse drag events (desktop flick & drag)
-      modalViewport.addEventListener('mousedown', (e) => {
-        onStart(e.clientX, e.clientY);
-      });
+          if (currentDx < -45) {
+            this.nextPhoto();
+          } else if (currentDx > 45) {
+            this.prevPhoto();
+          } else {
+            modalSlide.style.transform = 'none';
+          }
+        }
+        gestureDetermined = false;
+      };
 
-      window.addEventListener('mousemove', (e) => {
-        if (isDragging) onMove(e.clientX, e.clientY);
-      });
-
-      window.addEventListener('mouseup', () => {
-        if (isDragging) onEnd();
-      });
+      modalViewport.addEventListener('touchend', onSwipeEnd, { passive: true });
+      modalViewport.addEventListener('touchcancel', onSwipeEnd, { passive: true });
     }
 
     // Keyboard navigation (Escape, Left Arrow, Right Arrow)

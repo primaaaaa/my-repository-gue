@@ -98,6 +98,7 @@ export class HeroComponent {
       skinCanvas: this.skinGenerator.getCanvas('ipb'),
       scale: 0.11
     });
+    this.character.setHalfBodyMode(true);
     this.scene.add(this.character.group);
     if (!this.hasEntered) {
       this.character.group.visible = false; // Completely invisible during loading
@@ -135,7 +136,7 @@ export class HeroComponent {
     this.character.group.position.set(0, currentHeroY, 0);
     this.character.group.scale.set(scaleHero, scaleHero, scaleHero);
     this.character.group.rotation.set(0, 0, 0);
-    this.character.setHalfBodyMode(false);
+    this.character.setHalfBodyMode(true);
   }
 
   initEventListeners() {

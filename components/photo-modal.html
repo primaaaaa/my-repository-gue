@@ -1,0 +1,53 @@
+<!-- ========================================================
+     GLOBAL LIGHTBOX MODAL FOR PROJECT PHOTO VIEWER
+     - Placed at root <body> level to prevent stacking context clipping
+     - Touch scrollable & swipeable for high-res screenshots
+     ======================================================== -->
+<div class="proj-photo-modal" id="projPhotoModal" aria-hidden="true" role="dialog" aria-modal="true" style="display: none;">
+  <div class="proj-modal-backdrop" id="projModalBackdrop"></div>
+
+  <div class="proj-modal-container">
+    <!-- Modal Topbar -->
+    <div class="proj-modal-header" id="projModalHeader">
+      <div class="proj-modal-info">
+        <h3 class="proj-modal-title" id="projModalTitle">Judul Foto</h3>
+        <div class="proj-modal-meta">
+          <span class="proj-modal-proj-name" id="projModalProjName">MediGo</span>
+          <span class="proj-modal-dot">•</span>
+          <span class="proj-modal-counter" id="projModalCounter">1 / 8</span>
+        </div>
+      </div>
+      <button type="button" class="proj-modal-close-btn" id="projModalCloseBtn" aria-label="Tutup pratinjau gambar" title="Tutup (Esc)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Stage with Nav Buttons & Swipe Viewport -->
+    <div class="proj-modal-stage" id="projModalStage">
+      <button type="button" class="proj-modal-nav-btn proj-modal-prev" id="projModalPrevBtn" aria-label="Gambar sebelumnya" title="Sebelumnya (←)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+
+      <div class="proj-modal-viewport" id="projModalViewport">
+        <div class="proj-modal-slide" id="projModalSlide"></div>
+      </div>
+
+      <button type="button" class="proj-modal-nav-btn proj-modal-next" id="projModalNextBtn" aria-label="Gambar selanjutnya" title="Selanjutnya (→)">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="proj-modal-footer">
+      <span class="proj-modal-hint">Gulir gambar untuk melihat detail • Geser kiri/kanan untuk foto lain</span>
+      <button type="button" class="proj-modal-mobile-close-btn" id="projModalBottomCloseBtn" aria-label="Tutup galeri foto">Tutup</button>
+    </div>
+  </div>
+</div>

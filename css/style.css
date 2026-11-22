@@ -35,6 +35,7 @@ html {
   touch-action: pan-x pan-y;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  background-color: var(--bg-cream);
 }
 
 body {
@@ -109,8 +110,8 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -253,7 +254,8 @@ body {
   /* Solid RED */
   color: #ffffff;
   /* Pure WHITE */
-  padding: clamp(60px, 8vh, 100px) clamp(24px, 6vw, 70px);
+  margin-top: -3px;
+  padding: calc(clamp(60px, 8vh, 100px) + 3px) clamp(24px, 6vw, 70px) clamp(60px, 8vh, 100px);
   overflow: hidden;
   box-shadow: none;
   display: flex;
@@ -2608,7 +2610,9 @@ body {
 
 /* Animasi Goyang (Gentle 2D Sway & Bob - Tanpa putar / tilt ke belakang!) */
 @keyframes coinGoyangBob {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateY(0) rotate(0deg);
   }
 
@@ -2622,7 +2626,9 @@ body {
 }
 
 @keyframes shadowPulseGoyang {
-  0%, 100% {
+
+  0%,
+  100% {
     transform: translateX(-50%) scale(1.1);
     opacity: 0.32;
   }
@@ -3233,11 +3239,11 @@ body {
   color: #71717a;
 }
 
-/* Photo Lightbox Modal Overlay (Large, Swipeable & Draggable) */
+/* Photo Lightbox Modal Overlay (Large, Swipeable & Scrollable) */
 .proj-photo-modal {
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 9999999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3248,10 +3254,10 @@ body {
 .proj-modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(246, 244, 240, 0.55);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  animation: projModalFadeIn 0.25s ease forwards;
+  background: rgba(17, 17, 19, 0.65);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  animation: projModalFadeIn 0.22s ease forwards;
 }
 
 .proj-modal-container {
@@ -3262,11 +3268,11 @@ body {
   width: 100%;
   max-width: 1060px;
   height: 88vh;
-  max-height: 720px;
+  max-height: 780px;
   background: #FAF8F5;
   border: 3px solid #111113;
   border-radius: 24px;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.22);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   animation: projModalPopIn 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -3297,10 +3303,12 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 18px 26px;
+  padding: 16px 24px;
   background: #FAF8F5;
   border-bottom: 2px solid rgba(17, 17, 19, 0.08);
   flex-shrink: 0;
+  user-select: none;
+  touch-action: pan-y;
 }
 
 .proj-modal-info {
@@ -3373,8 +3381,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 16px;
-  gap: 12px;
+  padding: 0;
   overflow: hidden;
   background: #f4f0e6;
 }
@@ -3382,43 +3389,75 @@ body {
 .proj-modal-viewport {
   flex: 1;
   height: 100%;
+  width: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: stretch;
+  justify-content: stretch;
   overflow: hidden;
   position: relative;
-  user-select: none;
-  touch-action: pan-y;
-  cursor: grab;
-}
-
-.proj-modal-viewport:active {
-  cursor: grabbing;
 }
 
 .proj-modal-slide {
   width: 100%;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
+  padding: 16px;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  touch-action: pan-y pan-x pinch-zoom;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(209, 26, 42, 0.4) rgba(0, 0, 0, 0.05);
+}
+
+.proj-modal-slide::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.proj-modal-slide::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+}
+
+.proj-modal-slide::-webkit-scrollbar-thumb {
+  background: rgba(209, 26, 42, 0.4);
+  border-radius: 999px;
+}
+
+.proj-modal-slide::-webkit-scrollbar-thumb:hover {
+  background: var(--text-red);
+}
+
+.proj-modal-slide-inner {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
-  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .proj-modal-img {
+  display: block;
   max-width: 100%;
-  max-height: 100%;
+  height: auto;
+  max-height: 68vh;
   object-fit: contain;
   border-radius: 14px;
   border: 2px solid rgba(17, 17, 19, 0.12);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.16);
-  pointer-events: none;
+  pointer-events: auto;
 }
 
 .proj-modal-mockup {
   width: 100%;
-  height: 100%;
+  min-height: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3429,6 +3468,7 @@ body {
   color: #111113;
   border: 2px dashed rgba(17, 17, 19, 0.2);
   background: #f9f7f2;
+  box-sizing: border-box;
 }
 
 .proj-modal-mockup-icon {
@@ -3461,7 +3501,8 @@ body {
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
   border: 2px solid #111113;
   display: inline-flex;
   align-items: center;
@@ -3470,19 +3511,30 @@ body {
   cursor: pointer;
   flex-shrink: 0;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: 2;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.proj-modal-prev {
+  left: 14px;
+}
+
+.proj-modal-next {
+  right: 14px;
 }
 
 .proj-modal-nav-btn:hover {
   background: #111113;
   color: #ffffff;
   border-color: #111113;
-  transform: scale(1.1);
+  transform: translateY(-50%) scale(1.1);
 }
 
 .proj-modal-nav-btn:active {
-  transform: scale(0.95);
+  transform: translateY(-50%) scale(0.95);
 }
 
 .proj-modal-footer {
@@ -3930,20 +3982,23 @@ body {
   }
 
   .proj-photo-modal {
-    padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+    padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
     align-items: center;
     justify-content: center;
+    z-index: 9999999;
   }
 
   .proj-modal-container {
     width: 100%;
     max-width: 580px;
-    height: auto;
-    max-height: calc(100dvh - 28px);
-    max-height: calc(100vh - 28px);
+    height: calc(100dvh - 20px);
+    height: calc(100vh - 20px);
+    max-height: calc(100dvh - 20px);
     border-radius: 20px;
     border-width: 2.5px;
     box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
   }
 
   .proj-modal-header {
@@ -3951,6 +4006,7 @@ body {
     gap: 10px;
     position: relative;
     z-index: 10;
+    flex-shrink: 0;
   }
 
   .proj-modal-title {
@@ -3980,14 +4036,52 @@ body {
   .proj-modal-stage {
     padding: 0;
     position: relative;
-    min-height: 220px;
     flex: 1;
+    min-height: 0;
     overflow: hidden;
   }
 
   .proj-modal-viewport {
     width: 100%;
     height: 100%;
+    overflow: hidden;
+  }
+
+  .proj-modal-slide {
+    width: 100%;
+    height: 100%;
+    padding: 12px 10px;
+    display: block;
+    /* Enables natural vertical flow for long screenshot scroll */
+    overflow-y: auto;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    touch-action: pan-y pan-x pinch-zoom;
+  }
+
+  .proj-modal-slide-inner {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .proj-modal-img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: none;
+    /* Crucial! Allows the user to scroll down the entire screenshot! */
+    object-fit: contain;
+    border-radius: 12px;
+    border: 2px solid rgba(17, 17, 19, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    pointer-events: auto;
+    margin: 0 auto;
+    display: block;
   }
 
   .proj-modal-nav-btn {
@@ -3996,7 +4090,7 @@ body {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 6;
+    z-index: 10;
     background: rgba(255, 255, 255, 0.94);
     backdrop-filter: blur(8px);
     border: 1.5px solid #111113;
@@ -4022,6 +4116,7 @@ body {
     align-items: center;
     justify-content: space-between;
     gap: 10px;
+    flex-shrink: 0;
   }
 
   .proj-modal-hint {
@@ -4341,9 +4436,12 @@ body {
     transform: translateY(0);
     opacity: 1;
   }
+
   25% {
-    transform: translateY(12px); /* Tarikan sedikit ke bawah sebelum meluncur ke atas */
+    transform: translateY(12px);
+    /* Tarikan sedikit ke bawah sebelum meluncur ke atas */
   }
+
   100% {
     transform: translateY(-140%);
     opacity: 0;
@@ -4361,11 +4459,13 @@ body {
   }
 
   52% {
-    transform: translateY(22px); /* Overshoot memantul ke bawah sedikit */
+    transform: translateY(22px);
+    /* Overshoot memantul ke bawah sedikit */
   }
 
   72% {
-    transform: translateY(-9px); /* Pantulan balik ke atas karena ketegangan tali */
+    transform: translateY(-9px);
+    /* Pantulan balik ke atas karena ketegangan tali */
   }
 
   86% {
@@ -4384,25 +4484,26 @@ body {
   flex-direction: column;
   align-items: center;
   position: relative;
-  z-index: 6; /* Under Section 4 (z-index: 10), above Section 5 background */
-  margin-top: -70px; /* Tali masuk 70px ke balik section putih di atas agar menempel kokoh tanpa jeda */
+  z-index: 6;
+  /* Under Section 4 (z-index: 10), above Section 5 background */
+  margin-top: -70px;
+  /* Tali masuk 70px ke balik section putih di atas agar menempel kokoh tanpa jeda */
   pointer-events: none;
 }
 
 .lanyard-strap {
   position: relative;
   width: 52px;
-  height: 195px; /* Panjang 195px: 70px di balik section putih, 125px menjuntai ke section merah */
+  height: 195px;
+  /* Panjang 195px: 70px di balik section putih, 125px menjuntai ke section merah */
   background-color: #18181b;
   /* Authentic pixel-art stepped woven ribbon pattern */
   background-image:
-    repeating-linear-gradient(
-      0deg,
+    repeating-linear-gradient(0deg,
       #18181b 0px,
       #18181b 4px,
       #24242a 4px,
-      #24242a 8px
-    ),
+      #24242a 8px),
     linear-gradient(to right, #D11A2A 0px, #D11A2A 4px, transparent 4px, transparent 44px, #D11A2A 44px, #D11A2A 48px);
   border-left: 4px solid #111113;
   border-right: 4px solid #111113;
@@ -4422,13 +4523,11 @@ body {
   top: 0;
   bottom: 55px;
   width: 4px;
-  background-image: repeating-linear-gradient(
-    to bottom,
-    #D11A2A 0px,
-    #D11A2A 6px,
-    transparent 6px,
-    transparent 10px
-  );
+  background-image: repeating-linear-gradient(to bottom,
+      #D11A2A 0px,
+      #D11A2A 6px,
+      transparent 6px,
+      transparent 10px);
   image-rendering: pixelated;
 }
 
@@ -4485,7 +4584,8 @@ body {
   align-items: center;
   margin-top: -4px;
   position: relative;
-  z-index: 12; /* Pengait berada di atas kartu */
+  z-index: 12;
+  /* Pengait berada di atas kartu */
 }
 
 .pixel-lanyard-hardware {
@@ -4504,7 +4604,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  transform-origin: 50% 0; /* Anchor di titik paling atas tempat tali menggantung */
+  transform-origin: 50% 0;
+  /* Anchor di titik paling atas tempat tali menggantung */
   animation: lanyardPendulumSway 5.5s ease-in-out infinite alternate;
   cursor: pointer;
 }
@@ -4565,7 +4666,8 @@ body {
   justify-content: center;
   transform-origin: 50% 0;
   animation: lanyardCardSecondarySway 6s ease-in-out infinite alternate;
-  margin-top: -18px; /* Menarik kartu ke atas agar pengait masuk tepat ke dalam slot-hole */
+  margin-top: -18px;
+  /* Menarik kartu ke atas agar pengait masuk tepat ke dalam slot-hole */
 }
 
 @keyframes lanyardCardSecondarySway {
@@ -4598,7 +4700,8 @@ body {
     0 26px 54px rgba(0, 0, 0, 0.38);
   user-select: text;
   cursor: pointer;
-  padding-top: 8px; /* Slot punch berada pas di bibir atas kartu */
+  padding-top: 8px;
+  /* Slot punch berada pas di bibir atas kartu */
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.3s ease;
@@ -5080,13 +5183,27 @@ body {
 }
 
 @keyframes statusBlink {
-  from { opacity: 0.35; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1.15); }
+  from {
+    opacity: 0.35;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.15);
+  }
 }
 
 @keyframes printerPulseBreath {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.025); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.025);
+  }
 }
 
 /* Editorial Footer Note */
@@ -5165,7 +5282,8 @@ body {
   }
 
   .lanyard-suspension {
-    margin-top: -65px; /* Tetap menembus ke balik section putih di atas */
+    margin-top: -65px;
+    /* Tetap menembus ke balik section putih di atas */
   }
 
   .lanyard-strap {
@@ -5285,6 +5403,7 @@ body {
     font-size: 11.5px;
     box-shadow: 2.5px 2.5px 0 0 #111113;
   }
+
   .contact-compact-header {
     top: 24px;
     left: 8px;
@@ -5465,8 +5584,13 @@ body {
 }
 
 @keyframes preloaderCubeBob {
-  0% { transform: translateY(4px); }
-  100% { transform: translateY(-10px); }
+  0% {
+    transform: translateY(4px);
+  }
+
+  100% {
+    transform: translateY(-10px);
+  }
 }
 
 .pixel-cube {
